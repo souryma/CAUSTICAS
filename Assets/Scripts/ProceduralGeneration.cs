@@ -59,7 +59,7 @@ public class ProceduralGeneration : MonoBehaviour
             for (int y = 0; y < gridSize.y; y++)
             {
                 int random = Random.Range(0, 100);
-                if (random > 70)
+                if (random > 75)
                 {
                     _grid[x, y].isAvailable = false;
                 }
@@ -73,9 +73,27 @@ public class ProceduralGeneration : MonoBehaviour
         // Creates the starting point and the ending point and finds the shortest path between the two
         FindPath();
 
-        
+        // Sets all RoomData path bool at true
+        foreach (var (item1, item2) in _mainPath)
+        {
+            _grid[item1, item2].isPath = true;
+        }
+
         // Etape 5 : Dans le chemin trouvé, déterminer des cases qui seront un point de départ pour des chemins optionnels
+        foreach (var (item1, item2) in _mainPath)
+        {
+            if (_grid[item1, item2].isStart || _grid[item1, item2].isEnd)
+                continue;
+
+            // 1 chances on 3 to create a node on path 
+            if (Random.Range(0, 3) == 0)
+            {
+                _grid[item1, item2].isNode = true;
+            }
+        }
+
         // Etape 6 : Pour chaque case de départ choisir une case de fin et lancer l’algorithme de pathfinding entre les deux
+        CreateSideTunnels();
 
         SelectPrefab();
         Spawn();
@@ -99,15 +117,13 @@ public class ProceduralGeneration : MonoBehaviour
         // Update start and end tile on grid
         _grid[_startingRoom.x, _startingRoom.y].isStart = true;
         _grid[_startingRoom.x, _startingRoom.y].isAvailable = true;
+        _grid[_startingRoom.x, _startingRoom.y].isPath = true;
         _grid[_endingRoom.x, _endingRoom.y].isEnd = true;
         _grid[_endingRoom.x, _endingRoom.y].isAvailable = true;
+        _grid[_endingRoom.x, _endingRoom.y].isPath = true;
 
         // Add corners to path
-        if (fillCorners)
-            FillCorners(path);
-        else 
-            _mainPath = path.ToList();
-            
+        _mainPath = fillCorners ? FillCorners(path) : path.ToList();
     }
 
     // Generates a 2D array containing bool representing blockers on the map (false = tile blocked)
@@ -120,7 +136,7 @@ public class ProceduralGeneration : MonoBehaviour
         {
             for (int y = 0; y < gridSize.y; y++)
             {
-                if (_grid[x, y].isAvailable)
+                if (_grid[x, y].isAvailable && _grid[x, y].isPath == false)
                     walkableMap[y, x] = true;
                 else
                     walkableMap[y, x] = false;
@@ -131,8 +147,10 @@ public class ProceduralGeneration : MonoBehaviour
     }
 
     // Adds corners to the path, because the pathfinding algorithm uses diagonals
-    private void FillCorners((int, int)[] path)
+    private List<(int, int)> FillCorners((int, int)[] path)
     {
+        List<(int, int)> newPath = new List<(int, int)>();
+
         for (int i = 0; i < path.Length; i++)
         {
             int x = path[i].Item1;
@@ -145,34 +163,115 @@ public class ProceduralGeneration : MonoBehaviour
             if (x + 1 == path[i + 1].Item1 && y + 1 == path[i + 1].Item2)
             {
                 // check if upper cell is available, add it, otherwise, add the right cell
-                _mainPath.Add(_grid[x, y + 1].isAvailable ? (x, y + 1) : (x + 1, y));
+                if (_grid[x, y + 1].isAvailable && _grid[x, y + 1].isPath == false)
+                {
+                    newPath.Add((x, y + 1));
+                }
+                else
+                {
+                    newPath.Add((x + 1, y));
+                }
             }
             else
             {
                 if (x - 1 == path[i + 1].Item1 && y + 1 == path[i + 1].Item2)
                 {
                     // check if left cell is available, add it, otherwise, add the top cell
-                    _mainPath.Add(_grid[x - 1, y].isAvailable ? (x - 1, y) : (x, y + 1));
+                    if (_grid[x - 1, y].isAvailable && _grid[x - 1, y].isPath == false)
+                    {
+                        newPath.Add((x - 1, y));
+                    }
+                    else
+                    {
+                        newPath.Add((x, y + 1));
+                    }
                 }
                 else
                 {
                     if (x - 1 == path[i + 1].Item1 && y - 1 == path[i + 1].Item2)
                     {
                         // check if bottom cell is available, add it, otherwise, add the left cell
-                        _mainPath.Add(_grid[x, y - 1].isAvailable ? (x, y - 1) : (x - 1, y));
+                        if (_grid[x, y - 1].isAvailable && _grid[x, y - 1].isPath == false)
+                        {
+                            newPath.Add((x, y - 1));
+                        }
+                        else
+                        {
+                            newPath.Add((x - 1, y));
+                        }
                     }
                     else
                     {
                         if (x + 1 == path[i + 1].Item1 && y - 1 == path[i + 1].Item2)
                         {
                             // check if right cell is available, add it, otherwise, add the bottom cell
-                            _mainPath.Add(_grid[x + 1, y].isAvailable ? (x + 1, y) : (x, y - 1));
+                            if (_grid[x + 1, y].isAvailable && _grid[x + 1, y].isPath == false)
+                            {
+                                newPath.Add((x + 1, y));
+                            }
+                            else
+                            {
+                                newPath.Add((x, y - 1));
+                            }
                         }
                     }
                 }
             }
 
-            _mainPath.Add(path[i]);
+            newPath.Add(path[i]);
+        }
+
+        return newPath;
+    }
+
+    private void CreateSideTunnels()
+    {
+        for (int x = 0; x < gridSize.x; x++)
+        {
+            for (int y = 0; y < gridSize.y; y++)
+            {
+                if (!_grid[x, y].isNode) continue;
+
+                (int, int)[] path = new (int, int)[0];
+
+                _endingRoom = new int2(x, y);
+                // Keep searching until a valid end is found
+                while (_grid[_endingRoom.x, _endingRoom.y].isAvailable == false ||
+                       _grid[_endingRoom.x, _endingRoom.y].isPath == true)
+                {
+                    int endX = x + Random.Range(-5, 5);
+                    while (endX < 0 || endX > gridSize.x-1)
+                        endX = x + Random.Range(-5, 5);
+                    
+                    int endY = y + Random.Range(-5, 5);
+                    while (endY < 0 || endY > gridSize.y-1)
+                        endY = y + Random.Range(-5, 5);
+                    
+                    _endingRoom = new int2(endX, endY);
+                }
+
+                path = AStarPathfinding.GeneratePathSync(x, y, _endingRoom.x, _endingRoom.y, GeneratesWalkableMap());
+
+                // If no path is found, skip
+                if (path.Length == 0)
+                {
+                    _grid[x, y].isNode = false;
+                    continue;
+                }
+
+                List<(int, int)> newPath = new List<(int, int)>();
+
+                // Add corners to path
+                if (fillCorners)
+                    newPath = FillCorners(path);
+                else
+                    newPath = path.ToList();
+
+                foreach (var (item1, item2) in newPath)
+                {
+                    _grid[item1, item2].isPath = true;
+                }
+            }
         }
     }
 
@@ -211,7 +310,16 @@ public class ProceduralGeneration : MonoBehaviour
                     }
                 }
 
-                // Color path cells
+                // Color all path cells
+                if (_grid[x, y].isPath)
+                {
+                    foreach (var mr in tile.GetComponentsInChildren<MeshRenderer>())
+                    {
+                        mr.material.color = Color.cyan;
+                    }
+                }
+
+                // Color main path cells
                 foreach (var (item1, item2) in _mainPath)
                 {
                     if (x == item1 && y == item2)
@@ -236,6 +344,15 @@ public class ProceduralGeneration : MonoBehaviour
                     foreach (var mr in tile.GetComponentsInChildren<MeshRenderer>())
                     {
                         mr.material.color = Color.blue;
+                    }
+                }
+
+                // color starting optionnal nodes
+                if (_grid[x, y].isNode)
+                {
+                    foreach (var mr in tile.GetComponentsInChildren<MeshRenderer>())
+                    {
+                        mr.material.color = new Color(1, 0.5f, 0);
                     }
                 }
             }

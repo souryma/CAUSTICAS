@@ -14,4 +14,6 @@ public class RoomData : ScriptableObject
     public bool isAvailable = true;
     public bool isStart = false;
     public bool isEnd = false;
+    public bool isNode = false;
+    public bool isPath = false;
 }
