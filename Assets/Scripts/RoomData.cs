@@ -13,4 +13,7 @@ public class RoomData : ScriptableObject
     private List<RoomData> neighbours;
     public int id;
     public int2 coordinates;
+    public bool isAvailable = true;
+    public bool isStart = false;
+    public bool isEnd = false;
 }
