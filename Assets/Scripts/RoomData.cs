@@ -10,8 +10,6 @@ public class RoomData : ScriptableObject
 
     [SerializeField, Range(1, 4)] public int numberOfOpenings;
 
-    private List<RoomData> neighbours;
-    public int id;
     public int2 coordinates;
     public bool isAvailable = true;
     public bool isStart = false;
