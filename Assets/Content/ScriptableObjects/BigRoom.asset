@@ -12,5 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41fc800565f2bf14c8c56414ca2f8c7f, type: 3}
   m_Name: BigRoom
   m_EditorClassIdentifier: 
-  prefab: {fileID: 539750115430480357, guid: d9e1a5fd9a6dbd14997277217fd155c5, type: 3}
+  prefab: {fileID: 539750115430480357, guid: 40b7c79beeb3c924ea1d5f54ef8ca0b3, type: 3}
   numberOfOpenings: 4
+  coordinates:
+    x: 0
+    y: 0
+  isAvailable: 1
+  isStart: 0
+  isEnd: 0
+  isNode: 0
+  isPath: 0
