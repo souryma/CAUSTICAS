@@ -106,25 +106,24 @@ public class ProceduralGeneration : MonoBehaviour
     {
         for (int i = 0; i < path.Count - 1; i++)
         {
-            Debug.Log("Current block : " + path[i].Item1 + " / " + path[i].Item2);
-            Debug.Log("Next block : " + path[i + 1].Item1 + " / " + path[i + 1].Item2);
-            Debug.Log("Direction : " + RoomData.GetBlockDirection(path[i], path[i + 1]));
-
             _grid[path[i].Item1, path[i].Item2].blocDirection = RoomData.GetBlockDirection(path[i], path[i + 1]);
 
             if (i == 0) continue;
             // Detect corner using previous block direction
             if (_grid[path[i].Item1, path[i].Item2].blocDirection !=
                 _grid[path[i - 1].Item1, path[i - 1].Item2].blocDirection)
+            {
                 _grid[path[i].Item1, path[i].Item2].isCorner = true;
+                _grid[path[i].Item1, path[i].Item2].isInverted = RoomData.isInverse(
+                    _grid[path[i].Item1, path[i].Item2].blocDirection,
+                    _grid[path[i - 1].Item1, path[i - 1].Item2].blocDirection);
+            }
         }
 
         // Set direction for last bloc of the path
         _grid[path[^1].Item1, path[^1].Item2].blocDirection =
             RoomData.InverseDirection(_grid[path[^2].Item1, path[^2].Item2].blocDirection);
     }
-
-    
 
     private void FindPath()
     {
@@ -375,6 +374,12 @@ public class ProceduralGeneration : MonoBehaviour
                 }
 
                 OrientGameobjectAccordingToDirection(ref tile, _grid[x, y].blocDirection);
+                if (_grid[x, y].isInverted)
+                {
+                    Vector3 rotation = tile.transform.rotation.eulerAngles;
+                    rotation.y += 90;
+                    tile.transform.rotation = Quaternion.Euler(rotation);
+                }
 
                 // Color all path cells
                 if (_grid[x, y].isPath)

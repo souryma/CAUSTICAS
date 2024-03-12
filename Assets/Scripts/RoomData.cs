@@ -13,6 +13,7 @@ public class RoomData : ScriptableObject
         SOUTH,
         EAST
     }
+
     [SerializeField] public GameObject prefab;
 
     [SerializeField, Range(1, 4)] public int numberOfOpenings;
@@ -24,8 +25,9 @@ public class RoomData : ScriptableObject
     [HideInInspector] public bool isNode = false;
     [HideInInspector] public bool isPath = false;
     [HideInInspector] public bool isCorner = false;
+    [HideInInspector] public bool isInverted = false;
     [HideInInspector] public DIRECTION blocDirection = DIRECTION.WEST;
-    
+
     // Returns a direction to the next bloc
     public static DIRECTION GetBlockDirection((int, int) block, (int, int) nextBlock)
     {
@@ -40,6 +42,18 @@ public class RoomData : ScriptableObject
         // other case must be south SOUTH
 
         return direction;
+    }
+
+    // Return true if the corner must be inversed
+    public static bool isInverse(DIRECTION currentDir, DIRECTION previousDir)
+    {
+        if (previousDir == DIRECTION.WEST && currentDir == DIRECTION.NORTH ||
+            previousDir == DIRECTION.NORTH && currentDir == DIRECTION.EAST ||
+            previousDir == DIRECTION.EAST && currentDir == DIRECTION.SOUTH ||
+            previousDir == DIRECTION.SOUTH && currentDir == DIRECTION.WEST)
+            return true;
+        else
+            return false;
     }
 
     public static DIRECTION InverseDirection(DIRECTION direction)
