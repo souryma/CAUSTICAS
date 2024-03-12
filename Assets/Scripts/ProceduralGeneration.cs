@@ -90,7 +90,7 @@ public class ProceduralGeneration : MonoBehaviour
             // 1 chances on 3 to create a node on path 
             if (Random.Range(0, 3) == 0)
             {
-                _grid[item1, item2].isNode = true;
+                _grid[item1, item2].isNodeStart = true;
             }
         }
 
@@ -259,7 +259,7 @@ public class ProceduralGeneration : MonoBehaviour
         {
             for (int y = 0; y < gridSize.y; y++)
             {
-                if (!_grid[x, y].isNode) continue;
+                if (!_grid[x, y].isNodeStart) continue;
 
                 (int, int)[] path = new (int, int)[0];
 
@@ -278,15 +278,17 @@ public class ProceduralGeneration : MonoBehaviour
 
                     _endingRoom = new int2(endX, endY);
                 }
-
+                
                 path = AStarPathfinding.GeneratePathSync(x, y, _endingRoom.x, _endingRoom.y, GeneratesWalkableMap());
 
                 // If no path is found, skip
                 if (path.Length == 0)
                 {
-                    _grid[x, y].isNode = false;
+                    _grid[x, y].isNodeStart = false;
                     continue;
                 }
+                
+                _grid[_endingRoom.x, _endingRoom.y].isNodeEnd = true;
 
                 List<(int, int)> newPath = new List<(int, int)>();
 
@@ -325,14 +327,14 @@ public class ProceduralGeneration : MonoBehaviour
                 if (_grid[x, y].isPath)
                     _grid[x, y].prefab = roomTypes[1];
 
-                if (_grid[x, y].isNode)
-                    _grid[x, y].prefab = roomTypes[3];
-
-                if (_grid[x, y].isStart || _grid[x, y].isEnd)
+                if (_grid[x, y].isStart || _grid[x, y].isEnd || _grid[x, y].isNodeEnd)
                     _grid[x, y].prefab = roomTypes[4];
 
                 if (_grid[x, y].isCorner)
                     _grid[x, y].prefab = roomTypes[2];
+                
+                if (_grid[x, y].isNodeStart)
+                    _grid[x, y].prefab = roomTypes[3];
             }
         }
     }
@@ -419,11 +421,19 @@ public class ProceduralGeneration : MonoBehaviour
                 }
 
                 // color starting optionnal nodes
-                if (_grid[x, y].isNode)
+                if (_grid[x, y].isNodeStart)
                 {
                     foreach (var mr in tile.GetComponentsInChildren<MeshRenderer>())
                     {
                         mr.material.color = new Color(1, 0.5f, 0);
+                    }
+                }
+                
+                if (_grid[x, y].isNodeEnd)
+                {
+                    foreach (var mr in tile.GetComponentsInChildren<MeshRenderer>())
+                    {
+                        mr.material.color = new Color(0.5f, 0f, 1f);
                     }
                 }
             }

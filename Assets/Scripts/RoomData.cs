@@ -22,7 +22,8 @@ public class RoomData : ScriptableObject
     [HideInInspector] public bool isAvailable = true;
     [HideInInspector] public bool isStart = false;
     [HideInInspector] public bool isEnd = false;
-    [HideInInspector] public bool isNode = false;
+    [HideInInspector] public bool isNodeStart = false;
+    [HideInInspector] public bool isNodeEnd = false;
     [HideInInspector] public bool isPath = false;
     [HideInInspector] public bool isCorner = false;
     [HideInInspector] public bool isInverted = false;
