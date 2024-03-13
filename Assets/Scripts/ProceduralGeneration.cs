@@ -498,7 +498,7 @@ public class ProceduralGeneration : MonoBehaviour
         }
     }
 
-    public void ColorAllPath()
+    public void ColorAllWhite()
     {
         for (int x = 0; x < gridSize.x; x++)
         {
@@ -514,36 +514,21 @@ public class ProceduralGeneration : MonoBehaviour
             }
         }
     }
-
-    private void Spawn()
+    
+    public void ColorAllPath()
     {
         for (int x = 0; x < gridSize.x; x++)
         {
             for (int y = 0; y < gridSize.y; y++)
             {
-                var tile = Instantiate(_grid[x, y].prefab, transform);
-                tile.transform.localPosition = new Vector3(x * 10, 0f, y * 10);
-                _grid[x, y].instantiatedGameObject = tile;
-
+                var tile = _grid[x, y].instantiatedGameObject;
+                
                 if (_grid[x, y].isAvailable == false)
                 {
                     foreach (var mr in tile.GetComponentsInChildren<MeshRenderer>())
                     {
                         mr.material.color = Color.red;
                     }
-                }
-
-                OrientCornerAccordingToDirection(ref tile, _grid[x, y].blocDirection);
-                if (_grid[x, y].isCornerInverted)
-                {
-                    Vector3 rotation = tile.transform.rotation.eulerAngles;
-                    rotation.y += 90;
-                    tile.transform.rotation = Quaternion.Euler(rotation);
-                }
-
-                if (_grid[x, y].isNodeStart)
-                {
-                    OrientTshapeAccordingToDirection(ref tile, _grid[x, y].blocDirection);
                 }
 
                 // Color all path cells
@@ -598,6 +583,32 @@ public class ProceduralGeneration : MonoBehaviour
                     {
                         mr.material.color = new Color(0.5f, 0f, 1f);
                     }
+                }
+            }
+        }
+    }
+
+    private void Spawn()
+    {
+        for (int x = 0; x < gridSize.x; x++)
+        {
+            for (int y = 0; y < gridSize.y; y++)
+            {
+                var tile = Instantiate(_grid[x, y].prefab, transform);
+                tile.transform.localPosition = new Vector3(x * 10, 0f, y * 10);
+                _grid[x, y].instantiatedGameObject = tile;
+
+                OrientCornerAccordingToDirection(ref tile, _grid[x, y].blocDirection);
+                if (_grid[x, y].isCornerInverted)
+                {
+                    Vector3 rotation = tile.transform.rotation.eulerAngles;
+                    rotation.y += 90;
+                    tile.transform.rotation = Quaternion.Euler(rotation);
+                }
+
+                if (_grid[x, y].isNodeStart)
+                {
+                    OrientTshapeAccordingToDirection(ref tile, _grid[x, y].blocDirection);
                 }
             }
         }
