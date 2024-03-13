@@ -137,38 +137,69 @@ public class ProceduralGeneration : MonoBehaviour
                 continue;
             }
 
-
-            Debug.Log("Current T shape : " + currentTshape.Item1 + " / " + currentTshape.Item2);
-
-            // if NORTH, WEST, SOUTH => EAST
+            // Check case where there are 4 path around
             if (_grid[currentTshape.Item1 - 1, currentTshape.Item2].isPath &&
                 _grid[currentTshape.Item1, currentTshape.Item2 + 1].isPath &&
-                _grid[currentTshape.Item1, currentTshape.Item2 - 1].isPath)
+                _grid[currentTshape.Item1, currentTshape.Item2 - 1].isPath &&
+                _grid[currentTshape.Item1 + 1, currentTshape.Item2].isPath)
+            {
+                // Check WEST
+                if (isTileOnPath((currentTshape.Item1 - 1, currentTshape.Item2), sidePath) == false &&
+                    isTileOnPath((currentTshape.Item1 - 1, currentTshape.Item2), _mainPath) == false)
+                {
+                    _grid[currentTshape.Item1, currentTshape.Item2].blocDirection = RoomData.DIRECTION.WEST;
+                    continue;
+                }
+
+                // Check NORTH
+                if (isTileOnPath((currentTshape.Item1, currentTshape.Item2 + 1), sidePath) == false &&
+                    isTileOnPath((currentTshape.Item1, currentTshape.Item2 + 1), _mainPath) == false)
+                {
+                    _grid[currentTshape.Item1, currentTshape.Item2].blocDirection = RoomData.DIRECTION.NORTH;
+                    continue;
+                }
+
+                // Check SOUTH
+                if (isTileOnPath((currentTshape.Item1, currentTshape.Item2 - 1), sidePath) == false &&
+                    isTileOnPath((currentTshape.Item1, currentTshape.Item2 - 1), _mainPath) == false)
+                {
+                    _grid[currentTshape.Item1, currentTshape.Item2].blocDirection = RoomData.DIRECTION.SOUTH;
+                    continue;
+                }
+
+                // If not one of the 3 above : EAST
+                _grid[currentTshape.Item1, currentTshape.Item2].blocDirection = RoomData.DIRECTION.EAST;
+            }
+
+            // if no block in the direction -> the Tshape must be in that direction 
+            if (_grid[currentTshape.Item1 + 1, currentTshape.Item2].isPath == false)
             {
                 _grid[currentTshape.Item1, currentTshape.Item2].blocDirection = RoomData.DIRECTION.EAST;
             }
-            // if NORTH, WEST, EAST => SOUTH
-            else if (_grid[currentTshape.Item1 + 1, currentTshape.Item2].isPath &&
-                     _grid[currentTshape.Item1, currentTshape.Item2 + 1].isPath &&
-                     _grid[currentTshape.Item1 - 1, currentTshape.Item2].isPath)
+            else if (_grid[currentTshape.Item1, currentTshape.Item2 - 1].isPath == false)
             {
                 _grid[currentTshape.Item1, currentTshape.Item2].blocDirection = RoomData.DIRECTION.SOUTH;
             }
-            // if NORTH, EAST, SOUTH => WEST
-            else if (_grid[currentTshape.Item1 + 1, currentTshape.Item2].isPath &&
-                     _grid[currentTshape.Item1, currentTshape.Item2 + 1].isPath &&
-                     _grid[currentTshape.Item1, currentTshape.Item2 - 1].isPath)
+            else if (_grid[currentTshape.Item1 - 1, currentTshape.Item2].isPath == false)
             {
                 _grid[currentTshape.Item1, currentTshape.Item2].blocDirection = RoomData.DIRECTION.WEST;
             }
             else _grid[currentTshape.Item1, currentTshape.Item2].blocDirection = RoomData.DIRECTION.NORTH;
-
-            Debug.Log("Orientation : " + _grid[currentTshape.Item1, currentTshape.Item2].blocDirection);
-            Debug.Log("NORTH BLOCK : " + _grid[currentTshape.Item1, currentTshape.Item2 + 1].isPath);
-            Debug.Log("WEST BLOCK : " + _grid[currentTshape.Item1 - 1, currentTshape.Item2].isPath);
-            Debug.Log("SOUTH BLOCK : " + _grid[currentTshape.Item1, currentTshape.Item2 - 1].isPath);
-            Debug.Log("EAST BLOCK : " + _grid[currentTshape.Item1 + 1, currentTshape.Item2].isPath);
         }
+    }
+
+    // Returns true if the tile is in the path
+    private bool isTileOnPath((int, int) tile, List<(int, int)> path)
+    {
+        bool ret = false;
+
+        foreach (var pathTile in path)
+        {
+            if (tile.Item1 == pathTile.Item1 && tile.Item2 == pathTile.Item2)
+                ret = true;
+        }
+
+        return ret;
     }
 
     private void ComputePathDirection(List<(int, int)> path)
@@ -207,8 +238,6 @@ public class ProceduralGeneration : MonoBehaviour
             // Etape 4 : Lancer l’algorithme de pathfinding entre la case de début et de fin
             path = AStarPathfinding.GeneratePathSync(_startingRoom.x, _startingRoom.y, _endingRoom.x,
                 _endingRoom.y, GeneratesWalkableMap());
-
-            Debug.LogWarning("Possible infinite loop");
         }
 
         // Update start and end tile on grid
@@ -347,14 +376,12 @@ public class ProceduralGeneration : MonoBehaviour
                     while (endX < 0 || endX > gridSize.x - 1)
                     {
                         endX = x + Random.Range(-5, 5);
-                        Debug.LogWarning("Possible infinite loop ENDX");
                     }
 
                     int endY = y + Random.Range(-5, 5);
                     while (endY < 0 || endY > gridSize.y - 1)
                     {
                         endY = y + Random.Range(-5, 5);
-                        Debug.LogWarning("Possible infinite loop ENDY");
                     }
 
                     _endingRoom = new int2(endX, endY);

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -27,43 +25,8 @@ public class RoomData : ScriptableObject
     [HideInInspector] public bool isPath = false;
     [HideInInspector] public bool isCorner = false;
     [HideInInspector] public bool isCornerInverted = false;
-    [HideInInspector] public bool isTShapeInverted = false;
     [HideInInspector] public DIRECTION blocDirection = DIRECTION.WEST;
     public GameObject instantiatedGameObject;
-
-    public void SetTBlockDirection((int, int) nextSideBlock, (int, int) nextMainblock)
-    {
-        // Default : direction NORTH = means no connexion to north
-        
-        // Check if there are tunnels on EAST and WEST, so direction is NORTH
-        // if (nextSideBlock.Item1 < coordinates.x && nextSideBlock.Item2 == coordinates.y &&
-        //     nextMainblock.Item1 > coordinates.x && nextMainblock.Item2 == coordinates.y && blocDirection == DIRECTION.NORTH)
-        //     blocDirection = DIRECTION.NORTH;
-        // if (nextSideBlock.Item1 < coordinates.x && nextSideBlock.Item2 == coordinates.y &&
-        //     nextMainblock.Item1 > coordinates.x && nextMainblock.Item2 == coordinates.y && blocDirection == DIRECTION.SOUTH)
-        //     blocDirection = DIRECTION.SOUTH;
-        //
-        // // Check if there are tunnels on EAST and NORTH, so direction is WEST
-        // if (nextSideBlock.Item1 < coordinates.x && nextSideBlock.Item2 == coordinates.y &&
-        //     nextMainblock.Item1 == coordinates.x && nextMainblock.Item2 > coordinates.y && blocDirection == DIRECTION.WEST)
-        //     blocDirection = DIRECTION.SOUTH;
-        // if (nextSideBlock.Item1 < coordinates.x && nextSideBlock.Item2 == coordinates.y &&
-        //     nextMainblock.Item1 == coordinates.x && nextMainblock.Item2 > coordinates.y && blocDirection == DIRECTION.SOUTH)
-        //     blocDirection = DIRECTION.WEST;
-
-        // if (this.blocDirection == DIRECTION.NORTH && nextBlockSide.Item1 > this.coordinates.x &&
-        //         nextBlockSide.Item2 == this.coordinates.y)
-        //         this.isTShapeInverted = true;
-        // if (this.blocDirection == DIRECTION.EAST && nextBlockSide.Item1 == this.coordinates.x &&
-        //     nextBlockSide.Item2 < this.coordinates.y)
-        //     this.isTShapeInverted = true;
-        // if (this.blocDirection == DIRECTION.SOUTH && nextBlockSide.Item1 < this.coordinates.x &&
-        //     nextBlockSide.Item2 == this.coordinates.y)
-        //     this.isTShapeInverted = true;
-        // if (this.blocDirection == DIRECTION.WEST && nextBlockSide.Item1 == this.coordinates.x &&
-        //     nextBlockSide.Item2 > this.coordinates.y)
-        //     this.isTShapeInverted = true;
-    }
 
     // Returns a direction to the next bloc
     public static DIRECTION GetBlockDirection((int, int) block, (int, int) nextBlock)
