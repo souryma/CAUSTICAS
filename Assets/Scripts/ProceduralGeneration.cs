@@ -10,6 +10,7 @@ public class ProceduralGeneration : MonoBehaviour
     [SerializeField] private List<GameObject> roomTypes;
     [SerializeField] private int2 gridSize;
     [SerializeField] private bool fillCorners = true;
+    private bool _showGrid = true;
 
     private RoomData[,] _grid;
 
@@ -514,7 +515,7 @@ public class ProceduralGeneration : MonoBehaviour
             }
         }
     }
-    
+
     public void ColorAllPath()
     {
         for (int x = 0; x < gridSize.x; x++)
@@ -522,7 +523,7 @@ public class ProceduralGeneration : MonoBehaviour
             for (int y = 0; y < gridSize.y; y++)
             {
                 var tile = _grid[x, y].instantiatedGameObject;
-                
+
                 if (_grid[x, y].isAvailable == false)
                 {
                     foreach (var mr in tile.GetComponentsInChildren<MeshRenderer>())
@@ -588,6 +589,22 @@ public class ProceduralGeneration : MonoBehaviour
         }
     }
 
+    public void HideNonPath()
+    {
+        _showGrid = !_showGrid;
+
+        for (int x = 0; x < gridSize.x; x++)
+        {
+            for (int y = 0; y < gridSize.y; y++)
+            {
+                if (_grid[x, y].isPath == false)
+                {
+                    _grid[x, y].instantiatedGameObject.SetActive(_showGrid);
+                }
+            }
+        }
+    }
+
     private void Spawn()
     {
         for (int x = 0; x < gridSize.x; x++)
@@ -597,6 +614,9 @@ public class ProceduralGeneration : MonoBehaviour
                 var tile = Instantiate(_grid[x, y].prefab, transform);
                 tile.transform.localPosition = new Vector3(x * 10, 0f, y * 10);
                 _grid[x, y].instantiatedGameObject = tile;
+                
+                if (_grid[x,y].isPath == false)
+                    tile.SetActive(_showGrid);
 
                 OrientCornerAccordingToDirection(ref tile, _grid[x, y].blocDirection);
                 if (_grid[x, y].isCornerInverted)
