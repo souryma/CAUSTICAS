@@ -694,9 +694,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomTypes:
   - {fileID: 7948870620067933732, guid: 839d15c021ab58b4abc6dad26406e662, type: 3}
-  - {fileID: 7298452963101850961, guid: 65bcc22d915fd63469f3359de20d90bc, type: 3}
-  - {fileID: 284319183485681369, guid: 995b87ec4bb523e4885f33c99c78ffce, type: 3}
-  - {fileID: 539750115430480357, guid: e8eac2cad61ae1345be57d69ad8aea9b, type: 3}
+  - {fileID: 218090467262725137, guid: 1bb4f2b622dca304a9536a3f42c6e47f, type: 3}
+  - {fileID: 3865803635348945304, guid: 995b87ec4bb523e4885f33c99c78ffce, type: 3}
+  - {fileID: 8313039249957203446, guid: c13cfe946801c7942b8f8d42da26ea00, type: 3}
   - {fileID: 7948870620067933732, guid: edf873b21ef5d0c488f9e0df92acca03, type: 3}
   - {fileID: 539750115430480357, guid: d9e1a5fd9a6dbd14997277217fd155c5, type: 3}
   gridSize:
