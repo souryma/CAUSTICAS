@@ -12,12 +12,17 @@ public class ProceduralGeneration : MonoBehaviour
 
     private RoomData[,] _grid;
 
+
     private List<int2> _mainPath;
     private List<List<int2>> _sidePaths;
     private int2 _startingRoom;
     private int2 _endingRoom;
 
     private int _seed;
+    
+    public RoomData[,] Grid => _grid;
+    public List<int2> MainPath => _mainPath;
+    public List<List<int2>> SidePaths => _sidePaths;
 
     private void Clear()
     {
@@ -25,6 +30,11 @@ public class ProceduralGeneration : MonoBehaviour
         {
             DestroyImmediate(transform.GetChild(0).gameObject);
         }
+    }
+
+    public void GenerateRandomMap()
+    {
+        GenerateRandom();
     }
 
 
