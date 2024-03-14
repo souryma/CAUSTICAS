@@ -28,8 +28,8 @@ public class ProceduralGeneration : MonoBehaviour
     }
 
 
-    // Start is called before the first frame update
-    public void GenerateRandom()
+    // Returns the stating room coordinates
+    public int2 GenerateRandom()
     {
         Clear();
 
@@ -77,7 +77,7 @@ public class ProceduralGeneration : MonoBehaviour
         SelectPrefab();
         Spawn();
 
-        Debug.Log("Start Coordinates : " + _startingRoom.x * 10 + " / " + _startingRoom.y * 10);
+        return _startingRoom * 10;
     }
 
     // 25% chance for a block to be a blocker
