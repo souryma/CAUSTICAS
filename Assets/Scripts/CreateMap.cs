@@ -17,5 +17,7 @@ public class CreateMap : MonoBehaviour
         Player.transform.position = new Vector3(start.x, 2, start.y);
         Debug.Log(start.x + " / " + start.y);
         Debug.Log(Player.transform.position.x + " / " + Player.transform.position.z);
+        
+        proceduralGeneration.HideNonPath();
     }
 }
