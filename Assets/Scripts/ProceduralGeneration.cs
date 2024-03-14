@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using AStar;
 using Unity.Mathematics;
 using UnityEngine;
@@ -9,17 +8,14 @@ public class ProceduralGeneration : MonoBehaviour
 {
     [SerializeField] private List<GameObject> roomTypes;
     [SerializeField] private int2 gridSize;
-    [SerializeField] private bool fillCorners = true;
     private bool _showGrid = true;
 
     private RoomData[,] _grid;
 
-    private List<(int, int)> _mainPath;
-    private List<List<(int, int)>> _sidePaths;
+    private List<int2> _mainPath;
+    private List<List<int2>> _sidePaths;
     private int2 _startingRoom;
     private int2 _endingRoom;
-
-    // Represent the map with blocking tiles (false = block)
 
     private int _seed;
 
@@ -42,20 +38,51 @@ public class ProceduralGeneration : MonoBehaviour
 
         // ETAPE 1 : Créer un tableau en 2 dimensions
         _grid = new RoomData[gridSize.x, gridSize.y];
-        _mainPath = new List<(int, int)>();
-        _sidePaths = new List<List<(int, int)>>();
+        _mainPath = new List<int2>();
+        _sidePaths = new List<List<int2>>();
 
         // Fill Grid with template block
         for (int x = 0; x < _grid.GetLength(0); x++)
         {
             for (int y = 0; y < _grid.GetLength(1); y++)
             {
-                _grid[x, y] = ScriptableObject.CreateInstance<RoomData>();
-                _grid[x, y].coordinates = new int2(x, y);
+                _grid[x, y] = new RoomData(new int2(x, y));
             }
         }
 
-        // ETAPE 2 : Choisir des cases interdites pour l'algorithmes de path finding
+        // Creates the starting point and the ending point and finds the shortest path between the two
+        FindMainPath();
+
+        // Sets all blocs directions according to the path
+        ComputePathDirection(_mainPath);
+
+        // Etape 5 : Dans le chemin trouvé, déterminer des cases qui seront un point de départ pour des chemins optionnels
+        foreach (var coordinate in _mainPath)
+        {
+            if (_grid[coordinate.x, coordinate.y].isStart || _grid[coordinate.x, coordinate.y].isEnd)
+                continue;
+
+            // 1 chances on 3 to create a node on path 
+            if (Random.Range(0, 3) == 0)
+            {
+                _grid[coordinate.x, coordinate.y].isNodeStart = true;
+            }
+        }
+
+        // Etape 6 : Pour chaque case de départ choisir une case de fin et lancer l’algorithme de pathfinding entre les deux
+        CreateSideTunnels();
+
+        OrientTshaped();
+
+        SelectPrefab();
+        Spawn();
+
+        Debug.Log("Start Coordinates : " + _startingRoom.x * 10 + " / " + _startingRoom.y * 10);
+    }
+
+    // 25% chance for a block to be a blocker
+    private void SelectBlockers()
+    {
         for (int x = 0; x < gridSize.x; x++)
         {
             for (int y = 0; y < gridSize.y; y++)
@@ -71,40 +98,6 @@ public class ProceduralGeneration : MonoBehaviour
                 }
             }
         }
-
-        // Creates the starting point and the ending point and finds the shortest path between the two
-        FindMainPath();
-
-        // Sets all blocs directions according to the path
-        ComputePathDirection(_mainPath);
-
-        // Sets all RoomData path bool at true
-        foreach (var (item1, item2) in _mainPath)
-        {
-            _grid[item1, item2].isPath = true;
-        }
-
-        // Etape 5 : Dans le chemin trouvé, déterminer des cases qui seront un point de départ pour des chemins optionnels
-        foreach (var (item1, item2) in _mainPath)
-        {
-            if (_grid[item1, item2].isStart || _grid[item1, item2].isEnd)
-                continue;
-
-            // 1 chances on 3 to create a node on path 
-            if (Random.Range(0, 3) == 0)
-            {
-                _grid[item1, item2].isNodeStart = true;
-            }
-        }
-
-
-        // Etape 6 : Pour chaque case de départ choisir une case de fin et lancer l’algorithme de pathfinding entre les deux
-        CreateSideTunnels();
-
-        OrientTshaped();
-
-        SelectPrefab();
-        Spawn();
     }
 
     private void OrientTshaped()
@@ -114,116 +107,115 @@ public class ProceduralGeneration : MonoBehaviour
             var currentTshape = sidePath[0];
 
             // Check edge case
-            if (currentTshape.Item1 == gridSize.x - 1)
+            if (currentTshape.x == gridSize.x - 1)
             {
-                _grid[currentTshape.Item1, currentTshape.Item2].blocDirection = RoomData.DIRECTION.EAST;
+                _grid[currentTshape.x, currentTshape.y].blocDirection = RoomData.DIRECTION.EAST;
                 continue;
             }
 
-            if (currentTshape.Item1 == 0)
+            if (currentTshape.x == 0)
             {
-                _grid[currentTshape.Item1, currentTshape.Item2].blocDirection = RoomData.DIRECTION.WEST;
+                _grid[currentTshape.x, currentTshape.y].blocDirection = RoomData.DIRECTION.WEST;
                 continue;
             }
 
-            if (currentTshape.Item2 == gridSize.y - 1)
+            if (currentTshape.y == gridSize.y - 1)
             {
-                _grid[currentTshape.Item1, currentTshape.Item2].blocDirection = RoomData.DIRECTION.NORTH;
+                _grid[currentTshape.x, currentTshape.y].blocDirection = RoomData.DIRECTION.NORTH;
                 continue;
             }
 
-            if (currentTshape.Item2 == 0)
+            if (currentTshape.y == 0)
             {
-                _grid[currentTshape.Item1, currentTshape.Item2].blocDirection = RoomData.DIRECTION.SOUTH;
+                _grid[currentTshape.x, currentTshape.y].blocDirection = RoomData.DIRECTION.SOUTH;
                 continue;
             }
 
             // Check case where there are 4 path around
-            if (_grid[currentTshape.Item1 - 1, currentTshape.Item2].isPath &&
-                _grid[currentTshape.Item1, currentTshape.Item2 + 1].isPath &&
-                _grid[currentTshape.Item1, currentTshape.Item2 - 1].isPath &&
-                _grid[currentTshape.Item1 + 1, currentTshape.Item2].isPath)
+            if (_grid[currentTshape.x - 1, currentTshape.y].isPath &&
+                _grid[currentTshape.x, currentTshape.y + 1].isPath &&
+                _grid[currentTshape.x, currentTshape.y - 1].isPath &&
+                _grid[currentTshape.x + 1, currentTshape.y].isPath)
             {
                 // Check WEST
-                if (isTileOnPath((currentTshape.Item1 - 1, currentTshape.Item2), sidePath) == false &&
-                    isTileOnPath((currentTshape.Item1 - 1, currentTshape.Item2), _mainPath) == false)
+                if (isTileOnPath((currentTshape.x - 1, currentTshape.y), sidePath) == false &&
+                    isTileOnPath((currentTshape.x - 1, currentTshape.y), _mainPath) == false)
                 {
-                    _grid[currentTshape.Item1, currentTshape.Item2].blocDirection = RoomData.DIRECTION.WEST;
+                    _grid[currentTshape.x, currentTshape.y].blocDirection = RoomData.DIRECTION.WEST;
                     continue;
                 }
 
                 // Check NORTH
-                if (isTileOnPath((currentTshape.Item1, currentTshape.Item2 + 1), sidePath) == false &&
-                    isTileOnPath((currentTshape.Item1, currentTshape.Item2 + 1), _mainPath) == false)
+                if (isTileOnPath((currentTshape.x, currentTshape.y + 1), sidePath) == false &&
+                    isTileOnPath((currentTshape.x, currentTshape.y + 1), _mainPath) == false)
                 {
-                    _grid[currentTshape.Item1, currentTshape.Item2].blocDirection = RoomData.DIRECTION.NORTH;
+                    _grid[currentTshape.x, currentTshape.y].blocDirection = RoomData.DIRECTION.NORTH;
                     continue;
                 }
 
                 // Check SOUTH
-                if (isTileOnPath((currentTshape.Item1, currentTshape.Item2 - 1), sidePath) == false &&
-                    isTileOnPath((currentTshape.Item1, currentTshape.Item2 - 1), _mainPath) == false)
+                if (isTileOnPath((currentTshape.x, currentTshape.y - 1), sidePath) == false &&
+                    isTileOnPath((currentTshape.x, currentTshape.y - 1), _mainPath) == false)
                 {
-                    _grid[currentTshape.Item1, currentTshape.Item2].blocDirection = RoomData.DIRECTION.SOUTH;
+                    _grid[currentTshape.x, currentTshape.y].blocDirection = RoomData.DIRECTION.SOUTH;
                     continue;
                 }
 
                 // If not one of the 3 above : EAST
-                _grid[currentTshape.Item1, currentTshape.Item2].blocDirection = RoomData.DIRECTION.EAST;
+                _grid[currentTshape.x, currentTshape.y].blocDirection = RoomData.DIRECTION.EAST;
             }
 
             // if no block in the direction -> the Tshape must be in that direction 
-            if (_grid[currentTshape.Item1 + 1, currentTshape.Item2].isPath == false)
+            if (_grid[currentTshape.x + 1, currentTshape.y].isPath == false)
             {
-                _grid[currentTshape.Item1, currentTshape.Item2].blocDirection = RoomData.DIRECTION.EAST;
+                _grid[currentTshape.x, currentTshape.y].blocDirection = RoomData.DIRECTION.EAST;
             }
-            else if (_grid[currentTshape.Item1, currentTshape.Item2 - 1].isPath == false)
+            else if (_grid[currentTshape.x, currentTshape.y - 1].isPath == false)
             {
-                _grid[currentTshape.Item1, currentTshape.Item2].blocDirection = RoomData.DIRECTION.SOUTH;
+                _grid[currentTshape.x, currentTshape.y].blocDirection = RoomData.DIRECTION.SOUTH;
             }
-            else if (_grid[currentTshape.Item1 - 1, currentTshape.Item2].isPath == false)
+            else if (_grid[currentTshape.x - 1, currentTshape.y].isPath == false)
             {
-                _grid[currentTshape.Item1, currentTshape.Item2].blocDirection = RoomData.DIRECTION.WEST;
+                _grid[currentTshape.x, currentTshape.y].blocDirection = RoomData.DIRECTION.WEST;
             }
-            else _grid[currentTshape.Item1, currentTshape.Item2].blocDirection = RoomData.DIRECTION.NORTH;
+            else _grid[currentTshape.x, currentTshape.y].blocDirection = RoomData.DIRECTION.NORTH;
         }
     }
 
     // Returns true if the tile is in the path
-    private bool isTileOnPath((int, int) tile, List<(int, int)> path)
+    private bool isTileOnPath((int, int) tile, List<int2> path)
     {
         bool ret = false;
 
         foreach (var pathTile in path)
         {
-            if (tile.Item1 == pathTile.Item1 && tile.Item2 == pathTile.Item2)
+            if (tile.Item1 == pathTile.x && tile.Item2 == pathTile.y)
                 ret = true;
         }
 
         return ret;
     }
 
-    private void ComputePathDirection(List<(int, int)> path)
+    private void ComputePathDirection(List<int2> path)
     {
         for (int i = 0; i < path.Count - 1; i++)
         {
-            _grid[path[i].Item1, path[i].Item2].blocDirection = RoomData.GetBlockDirection(path[i], path[i + 1]);
+            _grid[path[i].x, path[i].y].SetBlockDirection(path[i], path[i + 1]);
 
             if (i == 0) continue;
             // Detect corner using previous block direction
-            if (_grid[path[i].Item1, path[i].Item2].blocDirection !=
-                _grid[path[i - 1].Item1, path[i - 1].Item2].blocDirection)
+            if (_grid[path[i].x, path[i].y].blocDirection !=
+                _grid[path[i - 1].x, path[i - 1].y].blocDirection)
             {
-                _grid[path[i].Item1, path[i].Item2].isCorner = true;
-                _grid[path[i].Item1, path[i].Item2].isCornerInverted = RoomData.isInverse(
-                    _grid[path[i].Item1, path[i].Item2].blocDirection,
-                    _grid[path[i - 1].Item1, path[i - 1].Item2].blocDirection);
+                _grid[path[i].x, path[i].y].isCorner = true;
+                _grid[path[i].x, path[i].y].SetInverse(
+                    _grid[path[i].x, path[i].y].blocDirection,
+                    _grid[path[i - 1].x, path[i - 1].y].blocDirection);
             }
         }
 
         // Set direction for last bloc of the path
-        _grid[path[^1].Item1, path[^1].Item2].blocDirection =
-            RoomData.InverseDirection(_grid[path[^2].Item1, path[^2].Item2].blocDirection);
+        _grid[path[^1].x, path[^1].y].InverseDirection(_grid[path[^2].x, path[^2].y].blocDirection);
     }
 
     private void FindMainPath()
@@ -233,6 +225,8 @@ public class ProceduralGeneration : MonoBehaviour
         // Etape 3 : Choisir une case de début et de fin
         while (path.Length == 0)
         {
+            SelectBlockers();
+
             _startingRoom = new int2(Random.Range(0, gridSize.x / 5), Random.Range(0, gridSize.y));
             _endingRoom = new int2(Random.Range(gridSize.x / 2, gridSize.x), Random.Range(0, gridSize.y));
 
@@ -250,7 +244,13 @@ public class ProceduralGeneration : MonoBehaviour
         _grid[_endingRoom.x, _endingRoom.y].isPath = true;
 
         // Add corners to path
-        _mainPath = fillCorners ? FillCorners(path) : path.ToList();
+        _mainPath = FillCorners(path);
+
+        // Tag all path elements
+        foreach (var coordinates in _mainPath)
+        {
+            _grid[coordinates.x, coordinates.y].isPath = true;
+        }
     }
 
     // Generates a 2D array containing bool representing blockers on the map (false = tile blocked)
@@ -274,9 +274,9 @@ public class ProceduralGeneration : MonoBehaviour
     }
 
     // Adds corners to the path, because the pathfinding algorithm uses diagonals
-    private List<(int, int)> FillCorners((int, int)[] path)
+    private List<int2> FillCorners((int, int)[] path)
     {
-        List<(int, int)> newPath = new List<(int, int)>();
+        List<int2> newPath = new List<int2>();
 
         for (int i = 0; i < path.Length; i++)
         {
@@ -286,22 +286,22 @@ public class ProceduralGeneration : MonoBehaviour
             // Stop loop if we are at the last cell
             if (x == _endingRoom.x && y == _endingRoom.y)
             {
-                newPath.Add((_endingRoom.x, _endingRoom.y));
+                newPath.Add(new int2(_endingRoom.x, _endingRoom.y));
                 break;
             }
 
-            newPath.Add(path[i]);
+            newPath.Add(new int2(path[i].Item1, path[i].Item2));
 
             if (x + 1 == path[i + 1].Item1 && y + 1 == path[i + 1].Item2)
             {
                 // check if upper cell is available, add it, otherwise, add the right cell
                 if (_grid[x, y + 1].isAvailable && _grid[x, y + 1].isPath == false)
                 {
-                    newPath.Add((x, y + 1));
+                    newPath.Add(new int2(x, y + 1));
                 }
                 else
                 {
-                    newPath.Add((x + 1, y));
+                    newPath.Add(new int2(x + 1, y));
                 }
             }
             else
@@ -311,11 +311,11 @@ public class ProceduralGeneration : MonoBehaviour
                     // check if left cell is available, add it, otherwise, add the top cell
                     if (_grid[x - 1, y].isAvailable && _grid[x - 1, y].isPath == false)
                     {
-                        newPath.Add((x - 1, y));
+                        newPath.Add(new int2(x - 1, y));
                     }
                     else
                     {
-                        newPath.Add((x, y + 1));
+                        newPath.Add(new int2(x, y + 1));
                     }
                 }
                 else
@@ -325,11 +325,11 @@ public class ProceduralGeneration : MonoBehaviour
                         // check if bottom cell is available, add it, otherwise, add the left cell
                         if (_grid[x, y - 1].isAvailable && _grid[x, y - 1].isPath == false)
                         {
-                            newPath.Add((x, y - 1));
+                            newPath.Add(new int2(x, y - 1));
                         }
                         else
                         {
-                            newPath.Add((x - 1, y));
+                            newPath.Add(new int2(x - 1, y));
                         }
                     }
                     else
@@ -339,11 +339,11 @@ public class ProceduralGeneration : MonoBehaviour
                             // check if right cell is available, add it, otherwise, add the bottom cell
                             if (_grid[x + 1, y].isAvailable && _grid[x + 1, y].isPath == false)
                             {
-                                newPath.Add((x + 1, y));
+                                newPath.Add(new int2(x + 1, y));
                             }
                             else
                             {
-                                newPath.Add((x, y - 1));
+                                newPath.Add(new int2(x, y - 1));
                             }
                         }
                     }
@@ -409,17 +409,14 @@ public class ProceduralGeneration : MonoBehaviour
 
                 _grid[_endingRoom.x, _endingRoom.y].isNodeEnd = true;
 
-                List<(int, int)> newPath = new List<(int, int)>();
+                List<int2> newPath = new List<int2>();
 
                 // Add corners to path
-                if (fillCorners)
-                    newPath = FillCorners(path);
-                else
-                    newPath = path.ToList();
+                newPath = FillCorners(path);
 
-                foreach (var (item1, item2) in newPath)
+                foreach (var coordinates in newPath)
                 {
-                    _grid[item1, item2].isPath = true;
+                    _grid[coordinates.x, coordinates.y].isPath = true;
                 }
 
                 _sidePaths.Add(newPath);
@@ -542,9 +539,9 @@ public class ProceduralGeneration : MonoBehaviour
                 }
 
                 // Color main path cells
-                foreach (var (item1, item2) in _mainPath)
+                foreach (var coordinates in _mainPath)
                 {
-                    if (x == item1 && y == item2)
+                    if (x == coordinates.x && y == coordinates.y)
                     {
                         foreach (var mr in tile.GetComponentsInChildren<MeshRenderer>())
                         {
@@ -614,8 +611,8 @@ public class ProceduralGeneration : MonoBehaviour
                 var tile = Instantiate(_grid[x, y].prefab, transform);
                 tile.transform.localPosition = new Vector3(x * 10, 0f, y * 10);
                 _grid[x, y].instantiatedGameObject = tile;
-                
-                if (_grid[x,y].isPath == false)
+
+                if (_grid[x, y].isPath == false)
                     tile.SetActive(_showGrid);
 
                 OrientCornerAccordingToDirection(ref tile, _grid[x, y].blocDirection);

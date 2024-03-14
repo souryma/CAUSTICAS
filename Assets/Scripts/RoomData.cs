@@ -1,8 +1,8 @@
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Data/Room", fileName = "Room")]
-public class RoomData : ScriptableObject
+public class RoomData
 {
     public enum DIRECTION
     {
@@ -12,70 +12,68 @@ public class RoomData : ScriptableObject
         EAST
     }
 
-    [SerializeField] public GameObject prefab;
+    public GameObject prefab;
 
-    [SerializeField, Range(1, 4)] public int numberOfOpenings;
-
-    [HideInInspector] public int2 coordinates;
-    [HideInInspector] public bool isAvailable = true;
-    [HideInInspector] public bool isStart = false;
-    [HideInInspector] public bool isEnd = false;
-    [HideInInspector] public bool isNodeStart = false;
-    [HideInInspector] public bool isNodeEnd = false;
-    [HideInInspector] public bool isPath = false;
-    [HideInInspector] public bool isCorner = false;
-    [HideInInspector] public bool isCornerInverted = false;
-    [HideInInspector] public DIRECTION blocDirection = DIRECTION.WEST;
+    private int2 _coordinates;
+    public bool isAvailable;
+    public bool isStart;
+    public bool isEnd;
+    public bool isNodeStart;
+    public bool isNodeEnd;
+    public bool isPath;
+    public bool isCorner;
+    public bool isCornerInverted;
+    public DIRECTION blocDirection;
     public GameObject instantiatedGameObject;
 
-    // Returns a direction to the next bloc
-    public static DIRECTION GetBlockDirection((int, int) block, (int, int) nextBlock)
+    public RoomData(int2 coordinates)
     {
-        DIRECTION direction = DIRECTION.SOUTH;
+        _coordinates = coordinates;
 
-        if (nextBlock.Item1 > block.Item1 && nextBlock.Item2 == block.Item2)
-            direction = DIRECTION.EAST;
-        else if (nextBlock.Item1 == block.Item1 && nextBlock.Item2 > block.Item2)
-            direction = DIRECTION.NORTH;
-        else if (nextBlock.Item1 < block.Item1 && nextBlock.Item2 == block.Item2)
-            direction = DIRECTION.WEST;
-        // other case must be south SOUTH
+        isAvailable = true;
+        isStart = false;
+        isEnd = false;
+        isNodeStart = false;
+        isNodeEnd = false;
+        isPath = false;
+        isCorner = false;
+        isCornerInverted = false;
+        blocDirection = DIRECTION.WEST;
+    }
 
-        return direction;
+    // Returns a direction to the next bloc
+    public void SetBlockDirection(int2 block, int2 nextBlock)
+    {
+        if (nextBlock.x > block.x && nextBlock.y == block.y)
+            blocDirection = DIRECTION.EAST;
+        else if (nextBlock.x == block.x && nextBlock.y > block.y)
+            blocDirection = DIRECTION.NORTH;
+        else if (nextBlock.x < block.x && nextBlock.y == block.y)
+            blocDirection = DIRECTION.WEST;
+        else blocDirection = DIRECTION.SOUTH;
     }
 
     // Return true if the corner must be inversed
-    public static bool isInverse(DIRECTION currentDir, DIRECTION previousDir)
+    public void SetInverse(DIRECTION currentDir, DIRECTION previousDir)
     {
         if (previousDir == DIRECTION.WEST && currentDir == DIRECTION.NORTH ||
             previousDir == DIRECTION.NORTH && currentDir == DIRECTION.EAST ||
             previousDir == DIRECTION.EAST && currentDir == DIRECTION.SOUTH ||
             previousDir == DIRECTION.SOUTH && currentDir == DIRECTION.WEST)
-            return true;
+            isCornerInverted = true;
         else
-            return false;
+            isCornerInverted = false;
     }
 
-    public static DIRECTION InverseDirection(DIRECTION direction)
+    public void InverseDirection(DIRECTION direction)
     {
-        DIRECTION inverse = DIRECTION.SOUTH;
-
-        switch (direction)
+        blocDirection = direction switch
         {
-            case DIRECTION.NORTH:
-                inverse = DIRECTION.SOUTH;
-                break;
-            case DIRECTION.SOUTH:
-                inverse = DIRECTION.NORTH;
-                break;
-            case DIRECTION.WEST:
-                inverse = DIRECTION.EAST;
-                break;
-            case DIRECTION.EAST:
-                inverse = DIRECTION.WEST;
-                break;
-        }
-
-        return inverse;
+            DIRECTION.NORTH => DIRECTION.SOUTH,
+            DIRECTION.SOUTH => DIRECTION.NORTH,
+            DIRECTION.WEST => DIRECTION.EAST,
+            DIRECTION.EAST => DIRECTION.WEST,
+            _ => blocDirection
+        };
     }
 }
