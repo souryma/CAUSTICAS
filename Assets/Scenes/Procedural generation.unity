@@ -1340,7 +1340,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1258225011}
         m_TargetAssemblyTypeName: ProceduralGeneration, Assembly-CSharp
-        m_MethodName: GenerateRandom
+        m_MethodName: GenerateRandomMap
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
