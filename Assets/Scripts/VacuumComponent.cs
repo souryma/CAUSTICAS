@@ -48,7 +48,6 @@ public class VacuumComponent : MonoBehaviour
         var direction = new Vector3(endPoint.x, 0, endPoint.y);
         //direction = direction.normalized;
 
-        Debug.Log(direction.x);
         transform.position += Time.deltaTime * Speed * direction;
 
         if (transform.position == endPoint)
