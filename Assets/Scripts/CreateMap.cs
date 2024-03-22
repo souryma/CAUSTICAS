@@ -16,6 +16,6 @@ public class CreateMap : MonoBehaviour
 
         Player.transform.position = new Vector3(start.x, 2, start.y);
         
-        proceduralGeneration.HideNonPath();
+        //proceduralGeneration.HideNonPath();
     }
 }
