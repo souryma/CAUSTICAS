@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using AStar;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class ProceduralGeneration : MonoBehaviour
@@ -15,11 +16,11 @@ public class ProceduralGeneration : MonoBehaviour
 
     private List<int2> _mainPath;
     private List<List<int2>> _sidePaths;
-    private int2 _startingRoom;
-    private int2 _endingRoom;
+    public int2 startingRoom;
+    public int2 endingRoom;
 
     private int _seed;
-    
+
     public RoomData[,] Grid => _grid;
     public List<int2> MainPath => _mainPath;
     public List<List<int2>> SidePaths => _sidePaths;
@@ -87,7 +88,7 @@ public class ProceduralGeneration : MonoBehaviour
         SelectPrefab();
         Spawn();
 
-        return _startingRoom * 10;
+        return startingRoom * 10;
     }
 
     // 25% chance for a block to be a blocker
@@ -237,21 +238,21 @@ public class ProceduralGeneration : MonoBehaviour
         {
             SelectBlockers();
 
-            _startingRoom = new int2(Random.Range(0, gridSize.x / 5), Random.Range(0, gridSize.y));
-            _endingRoom = new int2(Random.Range(gridSize.x / 2, gridSize.x), Random.Range(0, gridSize.y));
+            startingRoom = new int2(Random.Range(0, gridSize.x / 5), Random.Range(0, gridSize.y));
+            endingRoom = new int2(Random.Range(gridSize.x / 2, gridSize.x), Random.Range(0, gridSize.y));
 
             // Etape 4 : Lancer l’algorithme de pathfinding entre la case de début et de fin
-            path = AStarPathfinding.GeneratePathSync(_startingRoom.x, _startingRoom.y, _endingRoom.x,
-                _endingRoom.y, GeneratesWalkableMap());
+            path = AStarPathfinding.GeneratePathSync(startingRoom.x, startingRoom.y, endingRoom.x,
+                endingRoom.y, GeneratesWalkableMap());
         }
 
         // Update start and end tile on grid
-        _grid[_startingRoom.x, _startingRoom.y].isStart = true;
-        _grid[_startingRoom.x, _startingRoom.y].isAvailable = true;
-        _grid[_startingRoom.x, _startingRoom.y].isPath = true;
-        _grid[_endingRoom.x, _endingRoom.y].isEnd = true;
-        _grid[_endingRoom.x, _endingRoom.y].isAvailable = true;
-        _grid[_endingRoom.x, _endingRoom.y].isPath = true;
+        _grid[startingRoom.x, startingRoom.y].isStart = true;
+        _grid[startingRoom.x, startingRoom.y].isAvailable = true;
+        _grid[startingRoom.x, startingRoom.y].isPath = true;
+        _grid[endingRoom.x, endingRoom.y].isEnd = true;
+        _grid[endingRoom.x, endingRoom.y].isAvailable = true;
+        _grid[endingRoom.x, endingRoom.y].isPath = true;
 
         // Add corners to path
         _mainPath = FillCorners(path);
@@ -294,9 +295,9 @@ public class ProceduralGeneration : MonoBehaviour
             int y = path[i].Item2;
 
             // Stop loop if we are at the last cell
-            if (x == _endingRoom.x && y == _endingRoom.y)
+            if (x == endingRoom.x && y == endingRoom.y)
             {
-                newPath.Add(new int2(_endingRoom.x, _endingRoom.y));
+                newPath.Add(new int2(endingRoom.x, endingRoom.y));
                 break;
             }
 
@@ -374,14 +375,14 @@ public class ProceduralGeneration : MonoBehaviour
 
                 (int, int)[] path = new (int, int)[0];
 
-                _endingRoom = new int2(x, y);
+                endingRoom = new int2(x, y);
 
                 // Do not try more than 20 times
                 int numberOfTries = 0;
                 bool searchFailed = false;
                 // Keep searching until a valid end is found
-                while (_grid[_endingRoom.x, _endingRoom.y].isAvailable == false ||
-                       _grid[_endingRoom.x, _endingRoom.y].isPath == true)
+                while (_grid[endingRoom.x, endingRoom.y].isAvailable == false ||
+                       _grid[endingRoom.x, endingRoom.y].isPath == true)
                 {
                     int endX = x + Random.Range(-5, 5);
                     while (endX < 0 || endX > gridSize.x - 1)
@@ -395,7 +396,7 @@ public class ProceduralGeneration : MonoBehaviour
                         endY = y + Random.Range(-5, 5);
                     }
 
-                    _endingRoom = new int2(endX, endY);
+                    endingRoom = new int2(endX, endY);
 
                     if (numberOfTries > 20)
                     {
@@ -408,7 +409,7 @@ public class ProceduralGeneration : MonoBehaviour
 
                 if (searchFailed) continue;
 
-                path = AStarPathfinding.GeneratePathSync(x, y, _endingRoom.x, _endingRoom.y, GeneratesWalkableMap());
+                path = AStarPathfinding.GeneratePathSync(x, y, endingRoom.x, endingRoom.y, GeneratesWalkableMap());
 
                 // If no path is found, skip
                 if (path.Length == 0)
@@ -417,7 +418,7 @@ public class ProceduralGeneration : MonoBehaviour
                     continue;
                 }
 
-                _grid[_endingRoom.x, _endingRoom.y].isNodeEnd = true;
+                _grid[endingRoom.x, endingRoom.y].isNodeEnd = true;
 
                 List<int2> newPath = new List<int2>();
 

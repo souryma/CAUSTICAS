@@ -3,54 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class VacuumComponent : MonoBehaviour
 {
-    public ProceduralGeneration proceduralGeneration;
+    [SerializeField] private GameObject target;
 
-    private void SpawnVacuum()
-    {
-    }
-
-    private Vector3 startPoint;
-    private Vector3 endPoint;
-
-    private void Start()
-    {
-        startPoint = Vector3.zero;
-        endPoint = Vector3.zero;
-    }
-
-    [Range(0, 5)] public float Speed;
-
-    private bool isAtPoint = true;
-    private int _pathNumber = 0;
-
-    private float _floorHeight = 0.114f;
+    [SerializeField, Range(0, 0.1f)] private float speed = 0.03f;
 
     private void Update()
     {
-        if (isAtPoint)
-        {
-            startPoint = new Vector3(proceduralGeneration.MainPath[_pathNumber].x, _floorHeight,
-                proceduralGeneration.MainPath[_pathNumber].y);
-            startPoint = new Vector3(proceduralGeneration.MainPath[_pathNumber + 1].x, _floorHeight,
-                proceduralGeneration.MainPath[_pathNumber + 1].y);
-            
-            startPoint *= 10;
-            endPoint *= 10;
-            
-            transform.position = new Vector3(startPoint.x, _floorHeight, startPoint.y);
-
-            isAtPoint = false;
-        }
-
-        var direction = new Vector3(endPoint.x, 0, endPoint.y);
-        //direction = direction.normalized;
-
-        transform.position += Time.deltaTime * Speed * direction;
-
-        if (transform.position == endPoint)
-            isAtPoint = true;
+        transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed);
+        
+        transform.LookAt(target.transform);
     }
 }
