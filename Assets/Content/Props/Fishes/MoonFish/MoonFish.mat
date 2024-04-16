@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8292659091431249222
+--- !u!114 &-515860052695834580
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: LongfishMat
+  m_Name: MoonFish
   m_Shader: {fileID: -6465566751694194690, guid: ceab78a9dfa68a5419a63d0906f48754,
     type: 3}
   m_Parent: {fileID: 0}
@@ -74,11 +74,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Normal:
-        m_Texture: {fileID: 2800000, guid: ee423e2043cf8d0409e415ac1a28fca2, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _NormalMap:
-        m_Texture: {fileID: 2800000, guid: ee423e2043cf8d0409e415ac1a28fca2, type: 3}
+        m_Texture: {fileID: 2800000, guid: 4a982aa3a2131a944aa380fd435bd5ea, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -94,7 +90,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Texture:
-        m_Texture: {fileID: 2800000, guid: 4fdc1c0f15354f044b367eb984a97c8f, type: 3}
+        m_Texture: {fileID: 2800000, guid: b7fc49104acc59f418d9b09f15ca3e16, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -111,23 +107,15 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - Boolean_73A18E88: 1
-    - Vector1_22945F37: -2.5
-    - Vector1_54EC8D1B: 7.8
-    - Vector1_814530F0: 0.329
-    - Vector1_85BF2D7B: 0.06
-    - Vector1_8D24CCBB: 0.79
-    - Vector1_967624D6: 0.64
-    - Vector1_9B013F21: 29.5
-    - Vector1_B3FFAA06: 5.23
-    - Vector1_EB0BDD0D: 0.1
-    - Vector1_FA5BD4D7: 0.03
+    - Vector1_54EC8D1B: 5
+    - Vector1_8D24CCBB: 1
+    - Vector1_B3FFAA06: 1
+    - Vector1_EB0BDD0D: 0.36
     - _AlphaClip: 0
     - _AlphaToMask: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
-    - _CastShadows: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2
@@ -145,8 +133,6 @@ Material:
     - _Parallax: 0.005
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _RandomOffset: 4.53
-    - _RandomScale: 1.18
     - _ReceiveShadows: 1
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
@@ -155,20 +141,9 @@ Material:
     - _SrcBlendAlpha: 1
     - _Surface: 0
     - _UseEmission: 0
-    - _WavingSpeed: 0.94
     - _WorkflowMode: 1
-    - _ZTest: 4
     - _ZWrite: 1
-    - _ZWriteControl: 0
     m_Colors:
-    - Color_1F9E15B2: {r: 1, g: 1, b: 1, a: 0}
-    - Color_781BF453: {r: 0.8490566, g: 0.022053419, b: 0, a: 0}
-    - Color_984BFD57: {r: 0.9056604, g: 0.61263126, b: 0.17515126, a: 0}
-    - Color_9B4593B7: {r: 0.75471693, g: 0.75471693, b: 0.75471693, a: 0}
-    - Vector2_3F1DBD37: {r: 0, g: 0, b: 0, a: 0}
-    - Vector2_6B794E2A: {r: 0, g: 0, b: 0, a: 0}
-    - Vector2_8AC5A996: {r: 0.5, g: 0.5, b: 0, a: 0}
-    - Vector2_C50737C: {r: -0.3, g: 0.104, b: 0, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
