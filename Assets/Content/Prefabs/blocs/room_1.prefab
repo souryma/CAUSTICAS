@@ -64,7 +64,7 @@ GameObject:
   - component: {fileID: 4295888424471459946}
   - component: {fileID: 7782898966612860818}
   - component: {fileID: 5532323147109797913}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: window4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -147,7 +147,7 @@ GameObject:
   - component: {fileID: 3651214768802947244}
   - component: {fileID: 8352466119169617903}
   - component: {fileID: 3991680247040782949}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: window6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -230,7 +230,7 @@ GameObject:
   - component: {fileID: 3599534775696122848}
   - component: {fileID: 1778622306813396795}
   - component: {fileID: 5346127255534080770}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: window7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -313,7 +313,7 @@ GameObject:
   - component: {fileID: 7072597676281164608}
   - component: {fileID: 1044254861135143036}
   - component: {fileID: 2850661194990770049}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: structure
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -396,7 +396,7 @@ GameObject:
   - component: {fileID: 6170608718682962644}
   - component: {fileID: 837185197096446921}
   - component: {fileID: 7360658585807685179}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: window3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -479,7 +479,7 @@ GameObject:
   - component: {fileID: 3285901992365545844}
   - component: {fileID: 1496559046097768220}
   - component: {fileID: 5476480338012794227}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: window2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -562,7 +562,7 @@ GameObject:
   - component: {fileID: 3889551610527736324}
   - component: {fileID: 601864211842656929}
   - component: {fileID: 7347432620573812560}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: window5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -698,7 +698,7 @@ GameObject:
   - component: {fileID: 100739556641782576}
   - component: {fileID: 1486205200419424350}
   - component: {fileID: 4041806397388923653}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: window1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
