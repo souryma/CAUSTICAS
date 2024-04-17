@@ -378,6 +378,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   speed: 0.03
+  eyeRenderer: {fileID: 2565950174111657046}
 --- !u!54 &2762686697633873857
 Rigidbody:
   m_ObjectHideFlags: 0
