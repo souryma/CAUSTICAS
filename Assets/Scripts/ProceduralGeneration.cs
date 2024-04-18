@@ -18,6 +18,7 @@ public class ProceduralGeneration : MonoBehaviour
     private List<List<int2>> _sidePaths;
     public int2 startingRoom;
     public int2 endingRoom;
+    public List<int2> endingNodes;
 
     private int _seed;
 
@@ -40,7 +41,7 @@ public class ProceduralGeneration : MonoBehaviour
 
 
     // Returns the stating room coordinates
-    public int2 GenerateRandom()
+    public void GenerateRandom()
     {
         Clear();
 
@@ -51,6 +52,7 @@ public class ProceduralGeneration : MonoBehaviour
         _grid = new RoomData[gridSize.x, gridSize.y];
         _mainPath = new List<int2>();
         _sidePaths = new List<List<int2>>();
+        endingNodes = new List<int2>();
 
         // Fill Grid with template block
         for (int x = 0; x < _grid.GetLength(0); x++)
@@ -87,8 +89,6 @@ public class ProceduralGeneration : MonoBehaviour
 
         SelectPrefab();
         Spawn();
-
-        return startingRoom * 10;
     }
 
     // 25% chance for a block to be a blocker
@@ -419,6 +419,7 @@ public class ProceduralGeneration : MonoBehaviour
                 }
 
                 _grid[endingRoom.x, endingRoom.y].isNodeEnd = true;
+                endingNodes.Add(new int2(endingRoom.x, endingRoom.y));
 
                 List<int2> newPath = new List<int2>();
 
@@ -456,8 +457,11 @@ public class ProceduralGeneration : MonoBehaviour
                 if (_grid[x, y].isPath)
                     _grid[x, y].prefab = roomTypes[1];
 
-                if (_grid[x, y].isStart || _grid[x, y].isEnd || _grid[x, y].isNodeEnd)
+                if (_grid[x, y].isStart || _grid[x, y].isNodeEnd)
                     _grid[x, y].prefab = roomTypes[4];
+                
+                if (_grid[x, y].isEnd)
+                    _grid[x, y].prefab = roomTypes[6];
 
                 if (_grid[x, y].isCorner)
                     _grid[x, y].prefab = roomTypes[2];

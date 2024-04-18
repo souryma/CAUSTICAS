@@ -531,7 +531,7 @@ GameObject:
   - component: {fileID: 114762042097486276}
   m_Layer: 0
   m_Name: First Person Controller
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1564,7 +1564,7 @@ PrefabInstance:
     - target: {fileID: 994666080922300764, guid: a8930a121dd529440b0e4d1985a0526b,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 994666080922300764, guid: a8930a121dd529440b0e4d1985a0526b,
         type: 3}
@@ -1574,7 +1574,7 @@ PrefabInstance:
     - target: {fileID: 994666080922300764, guid: a8930a121dd529440b0e4d1985a0526b,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 994666080922300764, guid: a8930a121dd529440b0e4d1985a0526b,
         type: 3}
@@ -1589,7 +1589,7 @@ PrefabInstance:
     - target: {fileID: 994666080922300764, guid: a8930a121dd529440b0e4d1985a0526b,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 994666080922300764, guid: a8930a121dd529440b0e4d1985a0526b,
         type: 3}
