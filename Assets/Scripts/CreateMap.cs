@@ -28,6 +28,7 @@ public class CreateMap : MonoBehaviour
         {
             GameObject vac = Instantiate(VacuumPrefab, transform);
             vac.transform.position = new Vector3(endNode.x * 10, 2, endNode.y * 10);
+            _vacuums.Add(vac);
         }
 
         //proceduralGeneration.HideNonPath();
