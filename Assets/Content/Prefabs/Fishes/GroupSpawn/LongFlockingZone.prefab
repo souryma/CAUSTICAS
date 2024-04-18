@@ -48,6 +48,7 @@ MonoBehaviour:
     type: 3}
   flockSize: 10
   spawnBounds: {x: 10, y: 10, z: 10}
+  _fishType: 3
   _minSpeed: 5
   _maxSpeed: 9
   _cohesionDistance: 2

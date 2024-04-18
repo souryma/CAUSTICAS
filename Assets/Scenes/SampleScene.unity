@@ -647,14 +647,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   corridors:
   - {fileID: 218090467262725137, guid: 1bb4f2b622dca304a9536a3f42c6e47f, type: 3}
-  - {fileID: 218090467262725137, guid: 3142dc18e900204439a5f3f29e0e1464, type: 3}
   elbows:
   - {fileID: 3865803635348945304, guid: 995b87ec4bb523e4885f33c99c78ffce, type: 3}
   tShapes:
   - {fileID: 8313039249957203446, guid: c13cfe946801c7942b8f8d42da26ea00, type: 3}
   endNodes:
   - {fileID: 7896330561149923133, guid: edfc5a4f4f0bc1f428a07176b7e82c2a, type: 3}
-  startingRoomPrefab: {fileID: 7896330561149923133, guid: edfc5a4f4f0bc1f428a07176b7e82c2a,
+  startingRoomPrefab: {fileID: 7896330561149923133, guid: 889643436f0d8dd4fa11d0a0535e3a4c,
     type: 3}
   endingRoomPrefab: {fileID: 7896330561149923133, guid: 174f46a4ea3acd54cbef07d4724d4378,
     type: 3}
