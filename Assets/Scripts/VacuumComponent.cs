@@ -21,6 +21,8 @@ public class VacuumComponent : MonoBehaviour
     private bool isTurning = false;
     private bool isColorRed = false;
 
+    private int life = 3;
+
 
     private void Update()
     {
@@ -85,4 +87,27 @@ public class VacuumComponent : MonoBehaviour
 
         return hit;
     }
+
+    // Do the vaccuum life system. The vaccum has 3 points of life. When the player hit the vaccum the first time,
+    // it goes angry and it remove a life point. We have to hit it 2 times more to destroy it.
+
+
+    void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("Hit on the vaccum");
+        if (collision.collider.tag == "Weapon")
+        {
+            Debug.Log("It's a weapon");
+
+            life--;
+            isVaccumAngry = true;
+
+            if (life == 0)
+            {
+                Destroy(gameObject);
+            }
+        }
+    }   
+
+
 }

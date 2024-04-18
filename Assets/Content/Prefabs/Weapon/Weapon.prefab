@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 1634421526021237422}
   - component: {fileID: 1104942006902502036}
   - component: {fileID: 2936912379513023808}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Weapon
-  m_TagString: Untagged
+  m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -83,7 +83,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -101,6 +101,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Hammer
+      objectReference: {fileID: 0}
+    - target: {fileID: 635992865098052273, guid: 0be142e7d16d1cf43ad321b5379e828a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1799419433237874710, guid: 0be142e7d16d1cf43ad321b5379e828a,
         type: 3}
