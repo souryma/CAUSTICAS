@@ -1,12 +1,23 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class Flock : MonoBehaviour
 {
+    [Serializable]
+    enum FISH_TYPE
+    {
+        Starry,
+        Spiky,
+        Moony,
+        Longy
+    }
+    
     [Header("Spawn Setup")]
     [SerializeField] private FlockUnit flockUnitPrefab;
     [SerializeField] private int flockSize;
     [SerializeField] private Vector3 spawnBounds;
+    [SerializeField] private FISH_TYPE _fishType;
 
     [Header("Speed Setup")]
     [Range(0, 10)]
@@ -94,10 +105,35 @@ public class Flock : MonoBehaviour
             
             // Set random data in the shader
             var mr = allUnits[i].GetComponentInChildren<MeshRenderer>();
-            mr.material.SetFloat("_Distance", Random.Range(0.1f, 0.3f));
-            mr.material.SetFloat("_Frequency", Random.Range(7f, 13f));
-            mr.material.SetFloat("_Speed", Random.Range(10f, 30f));
-            mr.material.SetFloat("_Power", Random.Range(11f, 15f));
+
+            switch (_fishType)
+            {
+                case FISH_TYPE.Starry :
+                    mr.material.SetFloat("_Distance", Random.Range(0.1f, 0.3f));
+                    mr.material.SetFloat("_Frequency", Random.Range(7f, 13f));
+                    mr.material.SetFloat("_Speed", Random.Range(10f, 30f));
+                    mr.material.SetFloat("_Power", Random.Range(11f, 15f));
+                    break;
+                case FISH_TYPE.Longy :
+                    mr.material.SetFloat("_Distance", Random.Range(0.1f, 0.3f));
+                    mr.material.SetFloat("_Frequency", Random.Range(7f, 13f));
+                    mr.material.SetFloat("_Speed", Random.Range(10f, 30f));
+                    mr.material.SetFloat("_Power", Random.Range(11f, 15f));
+                    break;
+                case FISH_TYPE.Moony :
+                    mr.material.SetFloat("_Distance", Random.Range(0.1f, 0.3f));
+                    mr.material.SetFloat("_Frequency", Random.Range(7f, 13f));
+                    mr.material.SetFloat("_Speed", Random.Range(10f, 30f));
+                    mr.material.SetFloat("_Power", Random.Range(11f, 15f));
+                    break;
+                case FISH_TYPE.Spiky :
+                    mr.material.SetFloat("_Distance", Random.Range(0.5f, 1.5f));
+                    mr.material.SetFloat("_Frequency", Random.Range(1f, 5f));
+                    mr.material.SetFloat("_Speed", Random.Range(1f, 5f));
+                    mr.material.SetFloat("_Power", Random.Range(0.75f, 2f));
+                    break;
+            }
+            
             
             allUnits[i].AssignFlock(this);
             allUnits[i].InitializeSpeed(UnityEngine.Random.Range(minSpeed, maxSpeed));
