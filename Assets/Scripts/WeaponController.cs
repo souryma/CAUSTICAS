@@ -23,5 +23,14 @@ public class WeaponController : MonoBehaviour
                 mAnimator.SetTrigger("TrHit");
             }
         }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            if (mAnimator != null)
+            {
+                // Play the animation
+                mAnimator.SetTrigger("TrReverse");
+            }
+        }
     }
 }
