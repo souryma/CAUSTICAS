@@ -660,6 +660,8 @@ MonoBehaviour:
   emptyTiles:
   - {fileID: 417848881464192863, guid: 2afb0b282f959cc42b3ad0db8278f06c, type: 3}
   - {fileID: 417848881464192863, guid: 62e23f6d0264a884eb8a1dd2bb83bc7b, type: 3}
+  - {fileID: 417848881464192863, guid: d4db0670d1347774b810d8b251c41e3c, type: 3}
+  - {fileID: 417848881464192863, guid: 22285da2c89fa3f4ebe5b89f21444aba, type: 3}
   gridSize:
     x: 20
     y: 20
