@@ -7,7 +7,14 @@ using Random = UnityEngine.Random;
 
 public class ProceduralGeneration : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> roomTypes;
+    [SerializeField] private List<GameObject> corridors;
+    [SerializeField] private List<GameObject> elbows;
+    [SerializeField] private List<GameObject> tShapes;
+    [SerializeField] private List<GameObject> endNodes;
+    [SerializeField] private GameObject startingRoomPrefab;
+    [SerializeField] private GameObject endingRoomPrefab;
+    [SerializeField] private List<GameObject> emptyTiles;
+
     [SerializeField] private int2 gridSize;
     private bool _showGrid = true;
 
@@ -445,29 +452,25 @@ public class ProceduralGeneration : MonoBehaviour
         {
             for (int y = 0; y < gridSize.y; y++)
             {
-                if (_grid[x, y].isAvailable == false)
-                {
-                    _grid[x, y].prefab = roomTypes[0];
-                }
-                else
-                {
-                    _grid[x, y].prefab = roomTypes[5];
-                }
+                _grid[x, y].prefab = emptyTiles[Random.Range(0, emptyTiles.Count)];
 
                 if (_grid[x, y].isPath)
-                    _grid[x, y].prefab = roomTypes[1];
+                    _grid[x, y].prefab = corridors[Random.Range(0, corridors.Count)];
 
-                if (_grid[x, y].isStart || _grid[x, y].isNodeEnd)
-                    _grid[x, y].prefab = roomTypes[4];
-                
+                if (_grid[x, y].isNodeEnd)
+                    _grid[x, y].prefab = endNodes[Random.Range(0, endNodes.Count)];
+
+                if (_grid[x, y].isStart)
+                    _grid[x, y].prefab = startingRoomPrefab;
+
                 if (_grid[x, y].isEnd)
-                    _grid[x, y].prefab = roomTypes[6];
+                    _grid[x, y].prefab = endingRoomPrefab;
 
                 if (_grid[x, y].isCorner)
-                    _grid[x, y].prefab = roomTypes[2];
+                    _grid[x, y].prefab = elbows[Random.Range(0, elbows.Count)];
 
                 if (_grid[x, y].isNodeStart)
-                    _grid[x, y].prefab = roomTypes[3];
+                    _grid[x, y].prefab = tShapes[Random.Range(0, tShapes.Count)];
             }
         }
     }
