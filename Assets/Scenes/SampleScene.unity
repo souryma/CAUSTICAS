@@ -751,7 +751,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   corridors:
-  - {fileID: 218090467262725137, guid: 1bb4f2b622dca304a9536a3f42c6e47f, type: 3}
+  - {fileID: 218090467262725137, guid: d46f8d0d99e59fd48997a2c2b29d283b, type: 3}
   elbows:
   - {fileID: 3865803635348945304, guid: 995b87ec4bb523e4885f33c99c78ffce, type: 3}
   tShapes:
@@ -769,6 +769,7 @@ MonoBehaviour:
   - {fileID: 417848881464192863, guid: 22285da2c89fa3f4ebe5b89f21444aba, type: 3}
   - {fileID: 417848881464192863, guid: f5f854f60c92604459065ad4a1755dbb, type: 3}
   - {fileID: 417848881464192863, guid: d8483e9ce1725b3469a9997377b75e3f, type: 3}
+  - {fileID: 417848881464192863, guid: 36539dd44e6d55f48b8c831a900849c7, type: 3}
   gridSize:
     x: 20
     y: 20

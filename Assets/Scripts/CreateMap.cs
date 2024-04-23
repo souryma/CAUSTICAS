@@ -24,7 +24,7 @@ public class CreateMap : MonoBehaviour
             proceduralGeneration.startingRoom.y * 10);
         
         // spawn vaccum
-        foreach (var endNode in proceduralGeneration.endingNodes)
+        foreach (var endNode in proceduralGeneration.TNodes)
         {
             GameObject vac = Instantiate(VacuumPrefab, transform);
             vac.transform.position = new Vector3(endNode.x * 10, 2, endNode.y * 10);
