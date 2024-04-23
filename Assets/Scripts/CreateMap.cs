@@ -30,6 +30,8 @@ public class CreateMap : MonoBehaviour
             vac.transform.position = new Vector3(endNode.x * 10, 2, endNode.y * 10);
             _vacuums.Add(vac);
         }
+        
+        // Spawn 
 
         //proceduralGeneration.HideNonPath();
     }
