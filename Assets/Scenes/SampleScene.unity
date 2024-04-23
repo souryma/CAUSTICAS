@@ -767,6 +767,8 @@ MonoBehaviour:
   - {fileID: 417848881464192863, guid: 62e23f6d0264a884eb8a1dd2bb83bc7b, type: 3}
   - {fileID: 417848881464192863, guid: d4db0670d1347774b810d8b251c41e3c, type: 3}
   - {fileID: 417848881464192863, guid: 22285da2c89fa3f4ebe5b89f21444aba, type: 3}
+  - {fileID: 417848881464192863, guid: f5f854f60c92604459065ad4a1755dbb, type: 3}
+  - {fileID: 417848881464192863, guid: d8483e9ce1725b3469a9997377b75e3f, type: 3}
   gridSize:
     x: 20
     y: 20
