@@ -106,6 +106,7 @@ public class VacuumComponent : MonoBehaviour
 
             if (life == 0)
             {
+                GameManager.instance.hasKey=true;
                 Destroy(gameObject);
             }
         }

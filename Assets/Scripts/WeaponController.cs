@@ -7,6 +7,9 @@ public class WeaponController : MonoBehaviour
     private Animator mAnimator;
     private Collider weaponCollider;
 
+    [SerializeField] private GameObject hammer;
+    [SerializeField] private GameObject card;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,6 +30,14 @@ public class WeaponController : MonoBehaviour
         {
             StartCoroutine(Reverse());
         }
+
+        // switch between hammer and card
+        if (GameManager.instance.hasKey == true)
+        {
+            hammer.SetActive(false);
+            card.SetActive(true);
+        }
+
     }
 
     IEnumerator Hit()
