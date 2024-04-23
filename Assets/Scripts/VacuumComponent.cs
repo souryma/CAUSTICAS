@@ -1,6 +1,6 @@
-using System;
 using DG.Tweening;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class VacuumComponent : MonoBehaviour
 {
@@ -12,6 +12,8 @@ public class VacuumComponent : MonoBehaviour
 
     [SerializeField] private float rotationTime = 0.2f;
     [SerializeField] private int rotationAngle = 10;
+
+    [SerializeField] private AudioSource _vacuumSource;
 
     private RaycastHit frontRay;
     private RaycastHit rightRay;
@@ -26,6 +28,8 @@ public class VacuumComponent : MonoBehaviour
 
     private void Update()
     {
+        PlayVacuumSound();
+
         if (isVaccumAngry)
         {
             if (isColorRed == false)
@@ -69,6 +73,26 @@ public class VacuumComponent : MonoBehaviour
         }
     }
 
+
+    // Play loop if angry, otherwise, play at random
+    private void PlayVacuumSound()
+    {
+        if (isVaccumAngry)
+        {
+            if (!_vacuumSource.isPlaying)
+                _vacuumSource.Play();
+        }
+        else
+        {
+            if (Random.Range(0, 100) == 10)
+            {
+                if (!_vacuumSource.isPlaying)
+                    _vacuumSource.Play();
+            }
+        }
+    }
+
+
     private void TweenCompleted()
     {
         isTurning = false;
@@ -78,7 +102,8 @@ public class VacuumComponent : MonoBehaviour
     {
         RaycastHit hit;
 
-        Physics.SphereCast(new Vector3(transform.position.x, 1f, transform.position.z), 0.7f, direction, out hit);
+        Physics.SphereCast(new Vector3(transform.position.x, 1f, transform.position.z), 0.7f, direction,
+            out hit);
 
         hit.point = new Vector3(hit.point.x, 0, hit.point.z);
 
@@ -95,15 +120,18 @@ public class VacuumComponent : MonoBehaviour
         {
             collider.GetComponent<WeaponController>().DisableCollider();
 
+            GameManager.instance.PlayHitSound();
+
             life--;
 
             //Make the vaccum angry
             target = GameManager.instance.GetPlayer();
             isVaccumAngry = true;
 
+
             if (life == 0)
             {
-                GameManager.instance.hasKey=true;
+                GameManager.instance.hasKey = true;
                 Destroy(gameObject);
             }
         }

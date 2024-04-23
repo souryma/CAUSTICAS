@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class SasController : MonoBehaviour
 {
-
     [SerializeField] private bool needKey = false;
     [SerializeField] private GameObject OKSign;
     [SerializeField] private bool needDivingSuit = false;
+    [SerializeField] private AudioSource okAudioSource;
+    [SerializeField] private AudioSource OpeningSource;
+    [SerializeField] private AudioSource ClosingSource;
 
     private Animator mAnimator;
     private Collider mCollider;
@@ -22,36 +24,36 @@ public class SasController : MonoBehaviour
 
     private void OnTriggerEnter(Collider collider)
     {
-
         //if the collider is the player
         if (collider.gameObject.tag == "Player")
         {
             if (mAnimator != null)
             {
-                if(needKey)
+                if (needKey)
                 {
                     if (GameManager.instance.hasKey)
                     {
                         OKSign.SetActive(true);
+                        okAudioSource.Play();
                         StartCoroutine(Open());
                     }
+
                     return;
                 }
 
-                if(needDivingSuit)
+                if (needDivingSuit)
                 {
-                    if(GameManager.instance.hasDivingSuit)
+                    if (GameManager.instance.hasDivingSuit)
                     {
                         StartCoroutine(Open());
                     }
+
                     return;
                 }
 
 
                 StartCoroutine(Open());
-
             }
-            
         }
     }
 
@@ -62,12 +64,13 @@ public class SasController : MonoBehaviour
         {
             if (mAnimator != null)
             {
-                if(needKey)
+                if (needKey)
                 {
                     if (GameManager.instance.hasKey)
                     {
                         StartCoroutine(Close());
                     }
+
                     return;
                 }
 
@@ -77,34 +80,36 @@ public class SasController : MonoBehaviour
                     {
                         StartCoroutine(Close());
                     }
+
                     return;
                 }
 
                 StartCoroutine(Close());
-
             }
         }
     }
 
     IEnumerator Open()
     {
+        if (!OpeningSource.isPlaying)
+            OpeningSource.Play();
 
         // Play the animation
         mAnimator.SetTrigger("TrOpen");
 
         yield return new WaitForSeconds(1.0f);
         mCollider.enabled = false;
-
     }
 
     IEnumerator Close()
     {
+        if (!ClosingSource.isPlaying)
+            ClosingSource.Play();
 
         // Play the animation
         mAnimator.SetTrigger("TrClose");
 
         yield return new WaitForSeconds(1.0f);
         mCollider.enabled = true;
-
     }
 }

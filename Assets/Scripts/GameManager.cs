@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject Player;
     [SerializeField] private Volume _postProcessData;
+    [SerializeField] private AudioSource _hitSound;
     private LensDistortion _lensDistortion;
     private Vignette _vignette;
     private ChromaticAberration _chromaticAberration;
@@ -55,5 +56,11 @@ public class GameManager : MonoBehaviour
         _lensDistortion.active = true;
         _vignette.active = true;
         _chromaticAberration.active = true;
+    }
+
+    public void PlayHitSound()
+    {
+        _hitSound.volume = 5;
+        _hitSound.Play();
     }
 }

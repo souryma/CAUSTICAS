@@ -25,6 +25,9 @@ public class FirstPersonMovement : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (GameManager.instance.hasDivingSuit)
+            canRun = false;
+        
         // Update IsRunning from input.
         IsRunning = canRun && Input.GetKey(runningKey);
 
