@@ -6,6 +6,7 @@ public class SasController : MonoBehaviour
 {
 
     [SerializeField] private bool needKey = false;
+    [SerializeField] private bool needDivingSuit = false;
 
     private Animator mAnimator;
     private Collider mCollider;
@@ -35,6 +36,16 @@ public class SasController : MonoBehaviour
                     return;
                 }
 
+                if(needDivingSuit)
+                {
+                    if(GameManager.instance.hasDivingSuit)
+                    {
+                        StartCoroutine(Open());
+                    }
+                    return;
+                }
+
+
                 StartCoroutine(Open());
 
             }
@@ -52,6 +63,15 @@ public class SasController : MonoBehaviour
                 if(needKey)
                 {
                     if (GameManager.instance.hasKey)
+                    {
+                        StartCoroutine(Close());
+                    }
+                    return;
+                }
+
+                if (needDivingSuit)
+                {
+                    if (GameManager.instance.hasDivingSuit)
                     {
                         StartCoroutine(Close());
                     }
