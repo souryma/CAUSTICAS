@@ -15,6 +15,10 @@ public class VacuumComponent : MonoBehaviour
 
     [SerializeField] private AudioSource _vacuumSource;
 
+    [SerializeField] private GameObject _explodedVacuum;
+    [SerializeField] private BoxCollider _colliderComponent;
+    [SerializeField] private Rigidbody _rbComponent;
+
     private RaycastHit frontRay;
     private RaycastHit rightRay;
     private RaycastHit leftRay;
@@ -132,8 +136,19 @@ public class VacuumComponent : MonoBehaviour
             if (life == 0)
             {
                 GameManager.instance.hasKey = true;
-                Destroy(gameObject);
+                killVacuum();
+                //Destroy(gameObject);
             }
         }
+    }
+
+    private void killVacuum()
+    {
+        Destroy(_rbComponent);
+        Destroy(_colliderComponent);
+        eyeRenderer.transform.parent.gameObject.SetActive(false);
+        Destroy(_vacuumSource.gameObject);
+        _explodedVacuum.SetActive(true);
+        Destroy(this);
     }
 }
