@@ -1374,6 +1374,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: sas
       objectReference: {fileID: 0}
+    - target: {fileID: 8365362742791357138, guid: f758efa0ecd572b40ae8a82957e88cdf,
+        type: 3}
+      propertyPath: hasKey
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
