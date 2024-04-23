@@ -26,6 +26,7 @@ public class ProceduralGeneration : MonoBehaviour
     public int2 startingRoom;
     public int2 endingRoom;
     public List<int2> endingNodes;
+    public List<int2> TNodes;
 
     private int _seed;
 
@@ -60,6 +61,7 @@ public class ProceduralGeneration : MonoBehaviour
         _mainPath = new List<int2>();
         _sidePaths = new List<List<int2>>();
         endingNodes = new List<int2>();
+        TNodes = new List<int2>();
 
         // Fill Grid with template block
         for (int x = 0; x < _grid.GetLength(0); x++)
@@ -427,6 +429,7 @@ public class ProceduralGeneration : MonoBehaviour
 
                 _grid[endingRoom.x, endingRoom.y].isNodeEnd = true;
                 endingNodes.Add(new int2(endingRoom.x, endingRoom.y));
+                TNodes.Add(new int2(x, y));
 
                 List<int2> newPath = new List<int2>();
 
