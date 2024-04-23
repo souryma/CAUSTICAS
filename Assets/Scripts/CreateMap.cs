@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class CreateMap : MonoBehaviour
 {
@@ -30,8 +32,6 @@ public class CreateMap : MonoBehaviour
             vac.transform.position = new Vector3(endNode.x * 10, 2, endNode.y * 10);
             _vacuums.Add(vac);
         }
-        
-        // Spawn 
 
         //proceduralGeneration.HideNonPath();
     }

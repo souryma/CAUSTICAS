@@ -13,6 +13,7 @@ public class ProceduralGeneration : MonoBehaviour
     [SerializeField] private List<GameObject> endNodes;
     [SerializeField] private GameObject startingRoomPrefab;
     [SerializeField] private GameObject endingRoomPrefab;
+    [SerializeField] private GameObject divingSuitRoomPrefab;
     [SerializeField] private List<GameObject> emptyTiles;
 
     [SerializeField] private int2 gridSize;
@@ -95,9 +96,18 @@ public class ProceduralGeneration : MonoBehaviour
         CreateSideTunnels();
 
         OrientTshaped();
+        
+        AddDivingSuit();
 
         SelectPrefab();
         Spawn();
+    }
+
+    // Add the diving suit in a random room
+    private void AddDivingSuit()
+    {
+        int divingRoomNumber = Random.Range(0, endingNodes.Count);
+        _grid[endingNodes[divingRoomNumber].x, endingNodes[divingRoomNumber].y].containsDivingSuit = true;
     }
 
     // 25% chance for a block to be a blocker
@@ -468,6 +478,9 @@ public class ProceduralGeneration : MonoBehaviour
 
                 if (_grid[x, y].isEnd)
                     _grid[x, y].prefab = endingRoomPrefab;
+                
+                if (_grid[x, y].containsDivingSuit)
+                    _grid[x, y].prefab = divingSuitRoomPrefab;
 
                 if (_grid[x, y].isCorner)
                     _grid[x, y].prefab = elbows[Random.Range(0, elbows.Count)];

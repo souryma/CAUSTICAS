@@ -23,6 +23,7 @@ public class RoomData
     public bool isPath;
     public bool isCorner;
     public bool isCornerInverted;
+    public bool containsDivingSuit;
     public DIRECTION blocDirection;
     public GameObject instantiatedGameObject;
 
@@ -38,6 +39,7 @@ public class RoomData
         isPath = false;
         isCorner = false;
         isCornerInverted = false;
+        containsDivingSuit = false;
         blocDirection = DIRECTION.WEST;
     }
 
