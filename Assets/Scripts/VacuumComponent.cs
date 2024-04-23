@@ -92,14 +92,16 @@ public class VacuumComponent : MonoBehaviour
     // it goes angry and it remove a life point. We have to hit it 2 times more to destroy it.
 
 
-    void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider collider)
     {
-        Debug.Log("Hit on the vaccum");
-        if (collision.collider.tag == "Weapon")
+        if (collider.gameObject.CompareTag("Weapon"))
         {
-            Debug.Log("It's a weapon");
+            collider.GetComponent<WeaponController>().DisableCollider();
 
             life--;
+
+            //Make the vaccum angry
+            target = GameManager.instance.GetPlayer();
             isVaccumAngry = true;
 
             if (life == 0)
@@ -107,7 +109,5 @@ public class VacuumComponent : MonoBehaviour
                 Destroy(gameObject);
             }
         }
-    }   
-
-
+    }
 }

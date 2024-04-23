@@ -22,6 +22,14 @@ public class GameManager : MonoBehaviour
     public bool hasKey = false;
     public bool vaccumIsAlive = true;
 
+    [SerializeField] private GameObject Player;
+
+    //get and set player gameobject
+    public GameObject GetPlayer()
+    {
+        return Player;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
