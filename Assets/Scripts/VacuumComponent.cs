@@ -26,9 +26,6 @@ public class VacuumComponent : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.T))
-            isVaccumAngry = true;
-
         if (isVaccumAngry)
         {
             if (isColorRed == false)

@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class GameManager : MonoBehaviour
 {
@@ -23,6 +26,21 @@ public class GameManager : MonoBehaviour
     public bool vaccumIsAlive = true;
 
     [SerializeField] private GameObject Player;
+    [SerializeField] private Volume _postProcessData;
+    private LensDistortion _lensDistortion;
+    private Vignette _vignette;
+    private ChromaticAberration _chromaticAberration;
+
+    private void Start()
+    {
+        _postProcessData.profile.TryGet(out _lensDistortion);
+        _postProcessData.profile.TryGet(out _vignette);
+        _postProcessData.profile.TryGet(out _chromaticAberration);
+        
+        _lensDistortion.active = false;
+        _vignette.active = false;
+        _chromaticAberration.active = false;
+    }
 
     //get and set player gameobject
     public GameObject GetPlayer()
@@ -30,15 +48,12 @@ public class GameManager : MonoBehaviour
         return Player;
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public void GetDivingSuit()
     {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
+        hasDivingSuit = true;
         
+        _lensDistortion.active = true;
+        _vignette.active = true;
+        _chromaticAberration.active = true;
     }
 }
