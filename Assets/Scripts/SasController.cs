@@ -30,17 +30,12 @@ public class SasController : MonoBehaviour
                 {
                     if (GameManager.instance.hasKey)
                     {
-                        mAnimator.SetTrigger("TrOpen");
-                        //Desactivate the collider
-                        mCollider.enabled = false;
+                        StartCoroutine(Open());
                     }
                     return;
                 }
 
-                mAnimator.SetTrigger("TrOpen");
-                //Desactivate the collider
-                mCollider.enabled = false;
-
+                StartCoroutine(Open());
 
             }
             
@@ -58,17 +53,36 @@ public class SasController : MonoBehaviour
                 {
                     if (GameManager.instance.hasKey)
                     {
-                        mAnimator.SetTrigger("TrClose");
-                        //Activate the collider
-                        mCollider.enabled = true;
+                        StartCoroutine(Close());
                     }
+                    return;
                 }
 
-                mAnimator.SetTrigger("TrClose");
-                //Activate the collider
-                mCollider.enabled = true;
+                StartCoroutine(Close());
 
             }
         }
-    }       
+    }
+
+    IEnumerator Open()
+    {
+
+        // Play the animation
+        mAnimator.SetTrigger("TrOpen");
+
+        yield return new WaitForSeconds(1.0f);
+        mCollider.enabled = false;
+
+    }
+
+    IEnumerator Close()
+    {
+
+        // Play the animation
+        mAnimator.SetTrigger("TrClose");
+
+        yield return new WaitForSeconds(1.0f);
+        mCollider.enabled = true;
+
+    }
 }
