@@ -6,6 +6,7 @@ public class SasController : MonoBehaviour
 {
 
     [SerializeField] private bool needKey = false;
+    [SerializeField] private GameObject OKSign;
     [SerializeField] private bool needDivingSuit = false;
 
     private Animator mAnimator;
@@ -31,6 +32,7 @@ public class SasController : MonoBehaviour
                 {
                     if (GameManager.instance.hasKey)
                     {
+                        OKSign.SetActive(true);
                         StartCoroutine(Open());
                     }
                     return;
