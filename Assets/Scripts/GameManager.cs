@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -28,6 +25,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject Player;
     [SerializeField] private Volume _postProcessData;
     [SerializeField] private AudioSource _hitSound;
+    [SerializeField] private AudioSource _waterSound;
+    [SerializeField] private MeshRenderer _portalCard;
+    [SerializeField] private AudioSource _backgroundSource;
+    [SerializeField] private AudioClip _underwaterAudioClip;
+    [SerializeField] private Rigidbody playerRB;
+
     private LensDistortion _lensDistortion;
     private Vignette _vignette;
     private ChromaticAberration _chromaticAberration;
@@ -49,6 +52,14 @@ public class GameManager : MonoBehaviour
         return Player;
     }
 
+    public void SetUnderWaterColor()
+    {
+        _portalCard.material.color = new Color(0, 0.3607843f, 0.7176471f);
+        _backgroundSource.clip = _underwaterAudioClip;
+
+        playerRB.drag = 5;
+    }
+
     public void GetDivingSuit()
     {
         hasDivingSuit = true;
@@ -56,6 +67,12 @@ public class GameManager : MonoBehaviour
         _lensDistortion.active = true;
         _vignette.active = true;
         _chromaticAberration.active = true;
+    }
+    
+    public void PlayerWaterFillingSound()
+    {
+        _waterSound.Play();
+        _waterSound.loop = false;
     }
 
     public void PlayHitSound()

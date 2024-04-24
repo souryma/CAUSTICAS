@@ -52,8 +52,9 @@ public class SasController : MonoBehaviour
 
                 if (needDivingSuit)
                 {
-                    if (GameManager.instance.hasDivingSuit)
+                    if (GameManager.instance.hasDivingSuit && !endingSasOpening)
                     {
+                        endingSasOpening = true;
                         StartCoroutine(OpenEndingSas());
                     }
 
@@ -65,6 +66,8 @@ public class SasController : MonoBehaviour
             }
         }
     }
+
+    private bool endingSasOpening = false;
 
     private void OnTriggerExit(Collider collider)
     {
@@ -83,7 +86,7 @@ public class SasController : MonoBehaviour
                     return;
                 }
 
-                if (needDivingSuit)
+                if (needDivingSuit && !endingSasOpening)
                 {
                     if (GameManager.instance.hasDivingSuit)
                     {
@@ -107,8 +110,10 @@ public class SasController : MonoBehaviour
             yield return new WaitForSeconds(0.3f);
         }
         waterPlane.SetActive(true);
-        waterPlane.transform.DOMoveY(326/100, 5);
+        waterPlane.transform.DOMoveY(326/100, 10);
+        GameManager.instance.PlayerWaterFillingSound();
         yield return new WaitForSeconds(4);
+        GameManager.instance.SetUnderWaterColor();
         waterCollider.SetActive(false);
         yield return new WaitForSeconds(1);
         Light.material = GreenMaterial;
