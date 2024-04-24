@@ -13,7 +13,8 @@ public class VacuumComponent : MonoBehaviour
     [SerializeField] private float rotationTime = 0.2f;
     [SerializeField] private int rotationAngle = 10;
 
-    [SerializeField] private AudioSource _vacuumSource;
+    [SerializeField] private AudioSource _vacuumAspireSource;
+    [SerializeField] private AudioSource _vacuumVoiceSource;
 
     [SerializeField] private GameObject _explodedVacuum;
     [SerializeField] private BoxCollider _colliderComponent;
@@ -83,15 +84,19 @@ public class VacuumComponent : MonoBehaviour
     {
         if (isVaccumAngry)
         {
-            if (!_vacuumSource.isPlaying)
-                _vacuumSource.Play();
+            if (!_vacuumAspireSource.isPlaying)
+                _vacuumAspireSource.Play();
+
+            if (!_vacuumVoiceSource.isPlaying)
+                _vacuumVoiceSource.Play();
+                
         }
         else
         {
             if (Random.Range(0, 100) == 10)
             {
-                if (!_vacuumSource.isPlaying)
-                    _vacuumSource.Play();
+                if (!_vacuumAspireSource.isPlaying)
+                    _vacuumAspireSource.Play();
             }
         }
     }
@@ -147,7 +152,8 @@ public class VacuumComponent : MonoBehaviour
         Destroy(_rbComponent);
         Destroy(_colliderComponent);
         eyeRenderer.transform.parent.gameObject.SetActive(false);
-        Destroy(_vacuumSource.gameObject);
+        Destroy(_vacuumAspireSource.gameObject);
+        Destroy(_vacuumVoiceSource.gameObject);
         _explodedVacuum.SetActive(true);
         Destroy(this);
     }
