@@ -1,3 +1,4 @@
+using System.Collections;
 using DG.Tweening;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -19,6 +20,8 @@ public class VacuumComponent : MonoBehaviour
     [SerializeField] private GameObject _explodedVacuum;
     [SerializeField] private BoxCollider _colliderComponent;
     [SerializeField] private Rigidbody _rbComponent;
+    
+    [SerializeField] private ParticleSystem _hitParticles;
 
     private RaycastHit frontRay;
     private RaycastHit rightRay;
@@ -130,6 +133,7 @@ public class VacuumComponent : MonoBehaviour
             collider.GetComponent<WeaponController>().DisableCollider();
 
             GameManager.instance.PlayHitSound();
+            StartCoroutine(playParticles());
 
             life--;
 
@@ -147,6 +151,13 @@ public class VacuumComponent : MonoBehaviour
         }
     }
 
+    private IEnumerator playParticles()
+    {
+        _hitParticles.Play();
+        yield return new WaitForSeconds(0.3f);
+        _hitParticles.Stop();
+    }
+
     private void killVacuum()
     {
         Destroy(_rbComponent);
@@ -155,6 +166,7 @@ public class VacuumComponent : MonoBehaviour
         Destroy(_vacuumAspireSource.gameObject);
         Destroy(_vacuumVoiceSource.gameObject);
         _explodedVacuum.SetActive(true);
+        _hitParticles.Stop();
         Destroy(this);
     }
 }
