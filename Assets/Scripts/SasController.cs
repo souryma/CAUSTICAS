@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class SasController : MonoBehaviour
@@ -14,6 +15,9 @@ public class SasController : MonoBehaviour
     [SerializeField] private Material RedMaterial;
     [SerializeField] private Material OrangeMaterial;
     [SerializeField] private MeshRenderer Light;
+    [SerializeField] private List<GameObject> _roomLights;
+    [SerializeField] private GameObject waterPlane;
+    [SerializeField] private GameObject waterCollider;
 
 
     private Animator mAnimator;
@@ -97,7 +101,16 @@ public class SasController : MonoBehaviour
     private IEnumerator OpenEndingSas()
     {
         Light.material = OrangeMaterial;
-        yield return new WaitForSeconds(5);
+        foreach (var light in _roomLights)
+        {
+            light.SetActive(false);
+            yield return new WaitForSeconds(0.3f);
+        }
+        waterPlane.SetActive(true);
+        waterPlane.transform.DOMoveY(326/100, 5);
+        yield return new WaitForSeconds(4);
+        waterCollider.SetActive(false);
+        yield return new WaitForSeconds(1);
         Light.material = GreenMaterial;
         StartCoroutine(Open());
     }
