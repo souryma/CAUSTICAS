@@ -1230,16 +1230,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2ce4c766866bea46afe3e7c0298d2eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomTypes:
-  - {fileID: 7948870620067933732, guid: 839d15c021ab58b4abc6dad26406e662, type: 3}
-  - {fileID: 218090467262725137, guid: 1bb4f2b622dca304a9536a3f42c6e47f, type: 3}
+  corridors:
+  - {fileID: 218090467262725137, guid: d46f8d0d99e59fd48997a2c2b29d283b, type: 3}
+  elbows:
   - {fileID: 3865803635348945304, guid: 995b87ec4bb523e4885f33c99c78ffce, type: 3}
+  tShapes:
   - {fileID: 8313039249957203446, guid: c13cfe946801c7942b8f8d42da26ea00, type: 3}
-  - {fileID: 7948870620067933732, guid: edf873b21ef5d0c488f9e0df92acca03, type: 3}
-  - {fileID: 539750115430480357, guid: d9e1a5fd9a6dbd14997277217fd155c5, type: 3}
+  endNodes:
+  - {fileID: 7896330561149923133, guid: edfc5a4f4f0bc1f428a07176b7e82c2a, type: 3}
+  startingRoomPrefab: {fileID: 7896330561149923133, guid: 889643436f0d8dd4fa11d0a0535e3a4c,
+    type: 3}
+  endingRoomPrefab: {fileID: 7896330561149923133, guid: 174f46a4ea3acd54cbef07d4724d4378,
+    type: 3}
+  divingSuitRoomPrefab: {fileID: 7896330561149923133, guid: 25ecf3e78006ee6499b121eb2674bf0f,
+    type: 3}
+  emptyTiles:
+  - {fileID: 417848881464192863, guid: 2afb0b282f959cc42b3ad0db8278f06c, type: 3}
+  - {fileID: 417848881464192863, guid: 62e23f6d0264a884eb8a1dd2bb83bc7b, type: 3}
+  - {fileID: 417848881464192863, guid: d4db0670d1347774b810d8b251c41e3c, type: 3}
+  - {fileID: 417848881464192863, guid: 22285da2c89fa3f4ebe5b89f21444aba, type: 3}
+  - {fileID: 417848881464192863, guid: f5f854f60c92604459065ad4a1755dbb, type: 3}
+  - {fileID: 417848881464192863, guid: d8483e9ce1725b3469a9997377b75e3f, type: 3}
+  - {fileID: 417848881464192863, guid: 36539dd44e6d55f48b8c831a900849c7, type: 3}
   gridSize:
     x: 20
     y: 10
+  startingRoom:
+    x: 0
+    y: 0
+  endingRoom:
+    x: 0
+    y: 0
+  endingNodes: []
+  TNodes: []
 --- !u!4 &1258225012
 Transform:
   m_ObjectHideFlags: 0
