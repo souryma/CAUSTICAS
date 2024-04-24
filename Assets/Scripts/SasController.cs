@@ -10,6 +10,11 @@ public class SasController : MonoBehaviour
     [SerializeField] private AudioSource okAudioSource;
     [SerializeField] private AudioSource OpeningSource;
     [SerializeField] private AudioSource ClosingSource;
+    [SerializeField] private Material GreenMaterial;
+    [SerializeField] private Material RedMaterial;
+    [SerializeField] private Material OrangeMaterial;
+    [SerializeField] private MeshRenderer Light;
+
 
     private Animator mAnimator;
     private Collider mCollider;
@@ -45,7 +50,7 @@ public class SasController : MonoBehaviour
                 {
                     if (GameManager.instance.hasDivingSuit)
                     {
-                        StartCoroutine(Open());
+                        StartCoroutine(OpenEndingSas());
                     }
 
                     return;
@@ -87,6 +92,14 @@ public class SasController : MonoBehaviour
                 StartCoroutine(Close());
             }
         }
+    }
+
+    private IEnumerator OpenEndingSas()
+    {
+        Light.material = OrangeMaterial;
+        yield return new WaitForSeconds(5);
+        Light.material = GreenMaterial;
+        StartCoroutine(Open());
     }
 
     IEnumerator Open()
