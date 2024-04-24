@@ -1042,12 +1042,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   corridors:
   - {fileID: 218090467262725137, guid: d46f8d0d99e59fd48997a2c2b29d283b, type: 3}
+  - {fileID: 218090467262725137, guid: 285ec3ce68cd9f048ae0cc45ec8e6046, type: 3}
+  - {fileID: 218090467262725137, guid: 6e40ca4cac7ec1649ae659da46d72e7e, type: 3}
   elbows:
   - {fileID: 3865803635348945304, guid: 995b87ec4bb523e4885f33c99c78ffce, type: 3}
   tShapes:
   - {fileID: 8313039249957203446, guid: c13cfe946801c7942b8f8d42da26ea00, type: 3}
   endNodes:
   - {fileID: 7896330561149923133, guid: edfc5a4f4f0bc1f428a07176b7e82c2a, type: 3}
+  - {fileID: 7896330561149923133, guid: c7bbde2725ad48440a1084c6c477399e, type: 3}
+  - {fileID: 7896330561149923133, guid: bccaea0b5188781428b0c6755260792f, type: 3}
   startingRoomPrefab: {fileID: 7896330561149923133, guid: 889643436f0d8dd4fa11d0a0535e3a4c,
     type: 3}
   endingRoomPrefab: {fileID: 7896330561149923133, guid: 174f46a4ea3acd54cbef07d4724d4378,
